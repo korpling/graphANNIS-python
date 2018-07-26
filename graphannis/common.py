@@ -5,7 +5,7 @@ from ._ffi import ffi
 package_dir = os.path.normpath(os.path.realpath(__file__) + '/..')
 search_dirs = [
     package_dir + '/linux-x86-64/libgraphannis_capi.so',
-    package_dir + '/../../target/release/libgraphannis_capi.so'
+    package_dir + '/../../graphANNIS/target/release/libgraphannis_capi.so'
 ]
 
 shared_obj_file = None
