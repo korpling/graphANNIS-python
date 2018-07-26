@@ -1,5 +1,5 @@
 import copy
-
+import json
 
 def make_anno(name, value=None, match_regex=False, namespace=None):
     anno = dict()
@@ -27,6 +27,17 @@ def _range_def(min_distance, max_distance):
     else:
         return {'minDistance': min_distance if min_distance != None else 0, 'maxDistance': max_distance if max_distance != None else 0}
 
+class Disjunction:
+
+    def __init__(self, alternatives=[]):
+        self.q = dict()
+        self.q['alternatives'] = []
+        
+        if type(alternatives) == list:
+            for a in alternatives:
+                self.q['alternatives'].append(a.q)
+        else:
+            self.q['alternatives'].append(alternatives.q)
 
 class Conjunction:
     def __init__(self):
@@ -213,3 +224,9 @@ class Conjunction:
         )
 
         return obj
+
+    def __str__(self):
+        # get the disjunction
+
+        d = Disjunction(self)
+        return json.dumps(d.q)
