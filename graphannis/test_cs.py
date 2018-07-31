@@ -11,7 +11,7 @@ import networkx as nx
 
 class TestCorpusStorageManager(unittest.TestCase):
     def setUp(self):
-        self.dataDir = os.path.normpath(os.path.realpath(__file__) + '/../../../data')
+        self.dataDir = os.path.normpath(os.path.realpath(__file__) + '/../../data')
         # TODO load data if not test corpus does not exist yet
         
     def test_list(self):

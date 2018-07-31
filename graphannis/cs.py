@@ -1,3 +1,5 @@
+from enum import IntEnum
+
 from .common import CAPI
 from ._ffi import ffi
 from .graph import map_graph
@@ -9,6 +11,10 @@ class CSException(Exception):
     def __str__(self):
         return self.message
 
+class ResultOrder(IntEnum):
+    Normal = 0
+    Inverted = 1
+    Random = 2
 
 class CorpusStorageManager:
     def __init__(self, db_dir='data/', use_parallel=True):
@@ -25,7 +31,7 @@ class CorpusStorageManager:
         orig_size = int(CAPI.annis_vec_str_size(orig))
 
         copy = []
-        for idx, val in enumerate(range(orig_size)):
+        for idx, _ in enumerate(range(orig_size)):
             corpus_name = ffi.string(CAPI.annis_vec_str_get(orig, idx))
             copy.append(corpus_name.decode('utf-8'))
         return copy
@@ -38,10 +44,10 @@ class CorpusStorageManager:
         
         return result
 
-    def find(self, corpora, query_as_json, offset=0, limit=10):
+    def find(self, corpora, query_as_json, offset=0, limit=10, order=ResultOrder.Normal):
         result = []
         for c in corpora:
-            vec = CAPI.annis_cs_find(self.__cs, c.encode('utf-8'), query_as_json.encode('utf-8'), offset, limit)
+            vec = CAPI.annis_cs_find(self.__cs, c.encode('utf-8'), query_as_json.encode('utf-8'), offset, limit, int(order))
             vec_size = CAPI.annis_vec_str_size(vec)
             for i in range(vec_size):
                 result_str = ffi.string(CAPI.annis_vec_str_get(vec, i)).decode('utf-8')
