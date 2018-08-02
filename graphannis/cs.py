@@ -1,3 +1,4 @@
+import typing
 from enum import IntEnum
 
 from .common import CAPI
@@ -54,7 +55,7 @@ class CorpusStorageManager:
                 result.append(result_str)
         return result
 
-    def subgraph(self, corpus_name, node_ids, ctx_left=0, ctx_right=0):
+    def subgraph(self, corpus_name : str, node_ids, ctx_left=0, ctx_right=0):
         c_node_ids = CAPI.annis_vec_str_new()
         for nid in node_ids:
             CAPI.annis_vec_str_push(c_node_ids, nid.encode('utf-8'))
@@ -68,7 +69,24 @@ class CorpusStorageManager:
 
         return G
 
-    def apply_update(self, corpus_name, update):
+    def subcorpus_graph(self, corpus_name : str, document_ids):
+        c_document_ids = CAPI.annis_vec_str_new()
+        for id in document_ids:
+            CAPI.annis_vec_str_push(c_document_ids, id.encode('utf-8'))
+
+        result = None
+        db = CAPI.annis_cs_subcorpus_graph(self.__cs, corpus_name.encode('utf-8'), 
+        c_document_ids)
+
+        G = map_graph(db)
+
+        CAPI.annis_free(db)
+        CAPI.annis_free(c_document_ids)
+
+        return G
+        
+
+    def apply_update(self, corpus_name : str, update):
         """ Atomically apply update (add/delete nodes, edges and labels) to the database
 
         >>> from graphannis.cs import CorpusStorageManager
@@ -87,7 +105,7 @@ class CorpusStorageManager:
             CAPI.annis_free(result)
             raise CSException(msg)
 
-    def delete_corpus(self, corpus_name):
+    def delete_corpus(self, corpus_name : str):
         """ Delete a corpus from the database
 
         >>> from graphannis.cs import CorpusStorageManager
@@ -96,7 +114,7 @@ class CorpusStorageManager:
         """ 
         CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'))
 
-    def import_relannis(self, corpus_name, path):
+    def import_relannis(self, corpus_name : str, path):
         """ Import a legacy relANNIS file format into the database
         """ 
         
