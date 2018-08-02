@@ -41,7 +41,7 @@ class Disjunction:
 
 class Conjunction:
     def __init__(self):
-        self.q = {'nodes': [], 'joins': []}
+        self.q = {'nodes': {}, 'joins': []}
 
     def att(self, name, value=None, match_regex=False, namespace=None):
         """ Create a new attribute (node) search in the conjunction. The
@@ -65,11 +65,10 @@ class Conjunction:
                     make_anno(name, value, match_regex, namespace))
 
         node_idx = len(obj.q['nodes'])+1
-        obj.q['nodes'].append(
-            {node_idx: {
+        obj.q['nodes'][str(node_idx)] = {
                 'id': node_idx,
                 'nodeAnnotations': [node_anno]
-            }})
+            }
         return obj
 
     def precedence(self, n_left, n_right, min_distance=1, max_distance=1, seg_name=None):
