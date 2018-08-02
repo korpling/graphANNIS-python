@@ -53,7 +53,7 @@ def _get_edge_labels(db, edge_ptr, component_ptr):
 
 def _map_node(G, db, nID):
     labels = _get_node_labels(nID, db)
-    
+        
     G.add_node(nID)
     for key, value in labels.items():
         G.nodes[nID][key] = value
@@ -127,6 +127,19 @@ def map_graph(db):
 
 
     CAPI.annis_free(components)
+
+    # relabel the graph to your the salt ID as ID instead of the internal numerical ID
+    relabel_map = dict()
+
+    for old_id in list(G):
+        if 'annis::node_name' in G.nodes[old_id]:
+            new_id = G.nodes[old_id]['annis::node_name']
+            if not new_id.startswith('salt:/'):
+                new_id = 'salt:/' + new_id
+            relabel_map[old_id] = new_id
+            
+
+    G = nx.relabel_nodes(G, relabel_map)
 
     return G
 
