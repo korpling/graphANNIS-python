@@ -2,12 +2,17 @@
 
 from setuptools import setup, find_packages
 
+with open('README_pypi.md') as f:
+    long_description = f.read()
+
 setup(name='graphannis',
-      version='0.0.0',
+      version='0.0.1',
       description='graphANNIS Python API',
       author='Thomas Krause',
       author_email='thomaskrause@posteo.de',
-      url='https://github.com/thomaskrause/graphANNIS/',
+      url='https://github.com/thomaskrause/graphANNIS-python/',
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       packages=['graphannis'],
       include_package_data=True,
       setup_requires=["cffi>=1.0.0"],
