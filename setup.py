@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-with open('README_pypi.md') as f:
+with open('README_pypi.txt') as f:
     long_description = f.read()
 
 setup(name='graphannis',
