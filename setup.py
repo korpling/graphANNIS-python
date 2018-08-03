@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name='graphannis',
-      version='0.7.0',
+      version='0.0.0',
       description='graphANNIS Python API',
       author='Thomas Krause',
       author_email='thomaskrause@posteo.de',
@@ -13,4 +13,11 @@ setup(name='graphannis',
       setup_requires=["cffi>=1.0.0"],
       cffi_modules=["package/graphannis_build.py:ffibuilder"],
       install_requires=["cffi>=1.0.0","networkx"],
+      classifiers=(
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: POSIX :: Linux",
+        "Operating System :: MacOS :: MacOS X",
+        "Operating System :: Microsoft :: Windows"
+      ),
      )
