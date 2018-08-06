@@ -17,7 +17,7 @@ branches:
 
 install:
 - pip install cffi networkx
-- ./get-graphannis.sh
+- ./package/get-graphannis.sh
 
 script:
 - "./package/download-gum-corpus.sh"
