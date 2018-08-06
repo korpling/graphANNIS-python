@@ -17,9 +17,9 @@ branches:
   # command to install dependencies
 install:
   - pip install cffi networkx
-  - ./package/download-release-binaries.sh $RELEASE_VERSION
 # command to run tests
 script:
+  - ./package/download-release-binaries.sh $RELEASE_VERSION
   - ./package/download-gum-corpus.sh
   - ./doctest_runner.py
   - python -m unittest
