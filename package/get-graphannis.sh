@@ -14,14 +14,14 @@ fi
 
 if [ -z "$GRAPHANNIS_VERSION" ]; then
   # compile latest development
-  mkdir ext/
-  git clone https://github.com/corpus-tools/graphANNIS ext/graphANNIS
-  cd ext/graphANNIS
+  mkdir "$DIR"/../ext/
+  git clone https://github.com/corpus-tools/graphANNIS "$DIR"/../ext/graphANNIS
+  cd "$DIR"/../ext/graphANNIS
   cargo build --release
-  cp target/release/libgraphannis_capi.so "$DIR"/graphannis/linux-x86-64/
-  cd ../..
+  cp target/release/libgraphannis_capi.so "$DIR"/../graphannis/linux-x86-64/
+  cd "$DIR"/..
 else
   # get released version
   echo "getting $GRAPHANNIS_VERSION"
-  "$DIR"/package//download-release-binaries.sh "$GRAPHANNIS_VERSION"
+  "$DIR"/download-release-binaries.sh "$GRAPHANNIS_VERSION"
 fi
