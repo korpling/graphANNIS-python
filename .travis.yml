@@ -1,0 +1,25 @@
+language: python
+python:
+  - "3.6"
+
+env:
+  - RELEASE_VERSION=v0.7.1
+
+branches:
+  only:
+    # Release tags
+    - /^v\d+\.\d+\.\d+.*$/
+    - test-release-tag-please-ignore
+    - master
+    - develop
+    - feature/travis
+
+  # command to install dependencies
+install:
+  - pip install cffi networkx
+  - ./package/download-release-binaries.sh $RELEASE_VERSION
+# command to run tests
+script:
+  - ./package/download-gum-corpus.sh
+  - ./doctest_runner.py
+  - python -m unittest
