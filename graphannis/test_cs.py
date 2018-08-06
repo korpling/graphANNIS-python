@@ -12,7 +12,11 @@ import networkx as nx
 class TestCorpusStorageManager(unittest.TestCase):
     def setUp(self):
         self.dataDir = os.path.normpath(os.path.realpath(__file__) + '/../../data')
-        # TODO load data if not test corpus does not exist yet
+        # load data if not test corpus does not exist yet
+        relannis_dir = os.path.normpath(os.path.realpath(__file__) + '/../../relannis/GUM')
+        if not os.path.isdir(self.dataDir + '/GUM' ) and os.path.isdir(relannis_dir):
+            with CorpusStorageManager(self.dataDir) as cs:
+                cs.import_relannis('GUM', relannis_dir)
         
     def test_list(self):
         with CorpusStorageManager(self.dataDir) as cs:
