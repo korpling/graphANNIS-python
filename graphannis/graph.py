@@ -61,12 +61,13 @@ def _map_node(G, db, nID):
 def _map_edge(G, db, edge_ptr, component_ptr):
     labels = _get_edge_labels(db, edge_ptr, component_ptr)
 
-    G.add_edge(edge_ptr.source, edge_ptr.target)
+    edge_key = G.add_edge(edge_ptr.source, edge_ptr.target)
+    
     for key, value in labels.items():
-        G.edges[edge_ptr.source, edge_ptr.target][key] = value
+        G.edges[edge_ptr.source, edge_ptr.target, edge_key][key] = value
     # always add the component name and type as attribute
     component_name = CAPI.annis_component_name(component_ptr)
-    G.edges[edge_ptr.source, edge_ptr.target]['annis::component_name'] = ffi.string(component_name).decode('utf-8')
+    G.edges[edge_ptr.source, edge_ptr.target, edge_key]['annis::component_name'] = ffi.string(component_name).decode('utf-8')
     CAPI.annis_str_free(component_name)
 
     component_type_enum = CAPI.annis_component_type(component_ptr)
@@ -89,10 +90,10 @@ def _map_edge(G, db, edge_ptr, component_ptr):
         component_type = 'PartOfSubcorpus'
 
     if component_type != None:
-        G.edges[edge_ptr.source, edge_ptr.target]['annis::component_type'] = component_type
+        G.edges[edge_ptr.source, edge_ptr.target, edge_key]['annis::component_type'] = component_type
 
 def map_graph(db):
-    G = nx.DiGraph()
+    G = nx.MultiDiGraph()
     if db == ffi.NULL:
         return G
         

@@ -2,5 +2,6 @@
 /build
 /graphannis.egg-info
 /dist
-/data
 /.eggs
+/annis_history.txt
+/gum.zip
