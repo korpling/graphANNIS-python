@@ -22,7 +22,10 @@ before_install:
   # checkout latest development version of graphANNIS
   - ./package/get-graphannis.sh
 
-cache: cargo
+cache: 
+  directories:
+  - $HOME/.cargo
+  - $TRAVIS_BUILD_DIR/ext/graphANNIS/target/
 
 install:
 - pip install cffi networkx
