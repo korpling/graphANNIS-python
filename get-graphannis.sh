@@ -22,5 +22,5 @@ if [ -z ${GRAPHANNIS_VERSION+x} ]; then
 else
   # get released version
   echo "getting $GRAPHANNIS_VERSION"
-  "$DIR"/java-api/download-release-binaries.sh "$GRAPHANNIS_VERSION"
+  "$DIR"/package//download-release-binaries.sh "$GRAPHANNIS_VERSION"
 fi
