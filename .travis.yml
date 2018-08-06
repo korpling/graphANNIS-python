@@ -1,5 +1,6 @@
 env:
-- GRAPHANNIS_VERSION=v0.7.1
+  # if explicitly set, instead of compiling graphANNIS, the released version will be used 
+#- GRAPHANNIS_VERSION=v0.7.1
 
 
 language: python
@@ -16,9 +17,9 @@ branches:
 
 install:
 - pip install cffi networkx
+- ./get-graphannis.sh
 
 script:
-- "./package/download-release-binaries.sh $GRAPHANNIS_VERSION"
 - "./package/download-gum-corpus.sh"
 - "./doctest_runner.py"
 - python -m unittest
