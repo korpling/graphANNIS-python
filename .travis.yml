@@ -15,9 +15,16 @@ branches:
   - develop
   - feature/travis
 
+before_install:
+  - "curl -sSf https://build.travis-ci.org/files/rustup-init.sh | sh -s -- --default-toolchain=$RUST_VERSION -y"
+  - export PATH=$HOME/.cargo/bin:$PATH
+  # checkout latest development version of graphANNIS
+  - ./package/get-graphannis.sh
+
+cache: cargo
+
 install:
 - pip install cffi networkx
-- ./package/get-graphannis.sh
 
 script:
 - "./package/download-gum-corpus.sh"
