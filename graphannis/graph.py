@@ -63,9 +63,6 @@ def _map_edge(G, db, edge_ptr, component_ptr):
 
     edge_key = G.add_edge(edge_ptr.source, edge_ptr.target)
     
-    if len(labels) == 0:
-        return
-
     for key, value in labels.items():
         G.edges[edge_ptr.source, edge_ptr.target, edge_key][key] = value
     # always add the component name and type as attribute
