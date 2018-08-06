@@ -1,8 +1,11 @@
+env:
+- GRAPHANNIS_VERSION=v0.7.1
+
+
 language: python
 python:
 - '3.6'
-env:
-- RELEASE_VERSION=v0.7.1
+
 branches:
   only:
   - "/^v\\d+\\.\\d+\\.\\d+.*$/"
@@ -10,13 +13,16 @@ branches:
   - master
   - develop
   - feature/travis
+  
 install:
 - pip install cffi networkx
+
 script:
-- "./package/download-release-binaries.sh $RELEASE_VERSION"
+- "./package/download-release-binaries.sh $GRAPHANNIS_VERSION"
 - "./package/download-gum-corpus.sh"
 - "./doctest_runner.py"
 - python -m unittest
+
 deploy:
   provider: pypi
   on:
