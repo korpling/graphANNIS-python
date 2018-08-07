@@ -43,5 +43,6 @@ deploy:
   skip_cleanup: true
 #  server: https://test.pypi.org/legacy/
   user: thomaskrause
+  distributions: "sdist bdist_wheel"
   password:
     secure: IlgyDnn+3U6czX4l3OtentQFWtryW+uey/UJ7SaH308UBxWVwqHX7I8H9UJ7IjwjR3bjBzR2O9zo0PY02sXK6PJDMw911iz6ibF9j1o5dN9SyQt5r72je6qAvCQAGwJToB4JqT4jxkTnjO72L61ekN8GHi0pgr2bII8/9gNHWsBHYvrjYFMcryj2J4sVKCeode86V1TvsfdFeu+X+QUBzx2R0dtXIsuLZl5q/BlYM/pZnQ0qTWSTk1h4Rk/zpNVb7/RbZcc7b+xi+iJTrA1EMGkeVjzqyewaIsvh27X0uzPQB3JxIVWWhUE1SDlus2IsSzvpEoNdFiaUSxJ3e5HmEJ9SxCF+S92c1GdIRR0/5STKNGZcG4CSgXoIIjzIaeUNzFpnueyFVM+niD2KmFeSqenEb165pXU3TYQR6/A3lyfyg+x+Iue7XJC5oe6q7hLP71E3zfo0H7zlL5KMXA+UgsHmd84+qYxEn2LZQfrLwCbEOs6Nn1tYVkn3AIV2V3hnaSR3/rEIZWnU6F7hWx0cGPSZKtC2sK6+bzGzrU7sj88UTY6gYkJ/0FqiLErvYPW8rOl07N7IPdmLwUgURbJEU832Gna3+i5V/07hcdSIY5KqQUhPf8jleIW2G1Gw2iXPwZZH+J3sl3tkc3eM4bueAPXBrwMK23qLfTebq/mgVYk=
