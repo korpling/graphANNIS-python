@@ -74,7 +74,6 @@ class CorpusStorageManager:
         for id in document_ids:
             CAPI.annis_vec_str_push(c_document_ids, id.encode('utf-8'))
 
-        result = None
         db = CAPI.annis_cs_subcorpus_graph(self.__cs, corpus_name.encode('utf-8'), 
         c_document_ids)
 
@@ -112,7 +111,11 @@ class CorpusStorageManager:
         >>> with CorpusStorageManager() as cs:
         ...     cs.delete_corpus('test')
         """ 
-        CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'))
+        result = CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'))
+        if result != ffi.NULL:
+            msg = ffi.string(CAPI.annis_error_get_msg(result)).decode('utf-8')
+            CAPI.annis_free(result)
+            raise CSException(msg)
 
     def import_relannis(self, corpus_name : str, path):
         """ Import a legacy relANNIS file format into the database
