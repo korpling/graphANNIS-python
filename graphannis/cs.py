@@ -25,7 +25,7 @@ class CorpusStorageManager:
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):
-        CAPI.annis_free(self.__cs)
+        CAPI.annis_cs_free(self.__cs)
 
     def list(self):
         orig = CAPI.annis_cs_list(self.__cs)
