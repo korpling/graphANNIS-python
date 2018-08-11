@@ -108,7 +108,13 @@ class CorpusStorageManager:
         """ Delete a corpus from the database
 
         >>> from graphannis.cs import CorpusStorageManager
+        >>> from graphannis.graph import GraphUpdate 
         >>> with CorpusStorageManager() as cs:
+        ...     # create a corpus named "test"
+        ...     with GraphUpdate() as g:
+        ...         g.add_node('anynode')
+        ...         cs.apply_update('test', g)
+        ...     # delete it
         ...     cs.delete_corpus('test')
         """ 
         result = CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'))
