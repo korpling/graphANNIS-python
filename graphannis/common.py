@@ -17,15 +17,15 @@ system_id = None
 # check system is 64 bit
 if sys.maxsize > 2**32:
     if platform.system() == "Linux":
-        lib_file_name = "libgraphannis_capi.so"
+        lib_file_name = "libgraphannis.so"
         system_id = "linux-x86-64"
 
     elif platform.system() == "Darwin":
-        lib_file_name = "libgraphannis_capi.dylib"
+        lib_file_name = "libgraphannis.dylib"
         system_id = "darwin-x86-64"
 
     elif platform.system() == "Windows":
-        lib_file_name = "graphannis_capi.dll"
+        lib_file_name = "graphannis.dll"
         system_id = "win32-x86-64"
 
 else:
@@ -44,9 +44,9 @@ for d in search_dirs:
 
 if shared_obj_file == None:
     # let the system search for the shared library
-    shared_obj_file = find_library('graphannis_capi')
+    shared_obj_file = find_library('graphannis')
 
 if shared_obj_file == None:
-    raise ANNISException("Could not find graphannis_capi library in path (e.g. LD_LIBRARY_PATH)")
+    raise ANNISException("Could not find graphannis library in path (e.g. LD_LIBRARY_PATH)")
 
 CAPI = ffi.dlopen(shared_obj_file)
