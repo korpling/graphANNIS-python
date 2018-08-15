@@ -25,7 +25,7 @@ class CorpusStorageManager:
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):
-        CAPI.annis_free(self.__cs)
+        CAPI.annis_cs_free(self.__cs)
 
     def list(self):
         orig = CAPI.annis_cs_list(self.__cs)
@@ -74,7 +74,6 @@ class CorpusStorageManager:
         for id in document_ids:
             CAPI.annis_vec_str_push(c_document_ids, id.encode('utf-8'))
 
-        result = None
         db = CAPI.annis_cs_subcorpus_graph(self.__cs, corpus_name.encode('utf-8'), 
         c_document_ids)
 
@@ -109,10 +108,20 @@ class CorpusStorageManager:
         """ Delete a corpus from the database
 
         >>> from graphannis.cs import CorpusStorageManager
+        >>> from graphannis.graph import GraphUpdate 
         >>> with CorpusStorageManager() as cs:
+        ...     # create a corpus named "test"
+        ...     with GraphUpdate() as g:
+        ...         g.add_node('anynode')
+        ...         cs.apply_update('test', g)
+        ...     # delete it
         ...     cs.delete_corpus('test')
         """ 
-        CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'))
+        result = CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'))
+        if result != ffi.NULL:
+            msg = ffi.string(CAPI.annis_error_get_msg(result)).decode('utf-8')
+            CAPI.annis_free(result)
+            raise CSException(msg)
 
     def import_relannis(self, corpus_name : str, path):
         """ Import a legacy relANNIS file format into the database
