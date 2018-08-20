@@ -4,18 +4,14 @@ from enum import IntEnum
 from .common import CAPI
 from ._ffi import ffi
 from .graph import map_graph
+from .errors import consume_errors
 
-class CSException(Exception):
-    def __init__(self, m : str):
-        self.message = m
-
-    def __str__(self):
-        return self.message
 
 class ResultOrder(IntEnum):
     Normal = 0
     Inverted = 1
     Random = 2
+
 
 class CorpusStorageManager:
     def __init__(self, db_dir='data/', use_parallel=True):
@@ -27,8 +23,13 @@ class CorpusStorageManager:
     def __exit__(self, exc_type, exc_value, traceback):
         CAPI.annis_cs_free(self.__cs)
 
+
     def list(self):
-        orig = CAPI.annis_cs_list(self.__cs)
+
+        err = ffi.new("AnnisErrorList **")
+        orig = CAPI.annis_cs_list(self.__cs, err)
+        consume_errors(err)
+
         orig_size = int(CAPI.annis_vec_str_size(orig))
 
         copy = []
@@ -37,18 +38,22 @@ class CorpusStorageManager:
             copy.append(corpus_name.decode('utf-8'))
         return copy
     
-    def count(self, corpora, query_as_json):
+    def count(self, corpora, query_as_aql):
         result = int(0)
         for c in corpora:
-            result = result + CAPI.annis_cs_count(self.__cs, c.encode('utf-8'), query_as_json.encode('utf-8'))
-
+            err = ffi.new("AnnisErrorList **")
+            result = result + CAPI.annis_cs_count(self.__cs, c.encode('utf-8'), query_as_aql.encode('utf-8'), err)
+            consume_errors(err)
         
         return result
 
-    def find(self, corpora, query_as_json, offset=0, limit=10, order=ResultOrder.Normal):
+    def find(self, corpora, query_as_aql, offset=0, limit=10, order=ResultOrder.Normal):
         result = []
         for c in corpora:
-            vec = CAPI.annis_cs_find(self.__cs, c.encode('utf-8'), query_as_json.encode('utf-8'), offset, limit, int(order))
+            err = ffi.new("AnnisErrorList **")
+            vec = CAPI.annis_cs_find(self.__cs, c.encode('utf-8'), query_as_aql.encode('utf-8'), offset, limit, int(order), err)
+            consume_errors(err)
+
             vec_size = CAPI.annis_vec_str_size(vec)
             for i in range(vec_size):
                 result_str = ffi.string(CAPI.annis_vec_str_get(vec, i)).decode('utf-8')
@@ -60,7 +65,9 @@ class CorpusStorageManager:
         for nid in node_ids:
             CAPI.annis_vec_str_push(c_node_ids, nid.encode('utf-8'))
         
-        db = CAPI.annis_cs_subgraph(self.__cs, corpus_name.encode('utf-8'), c_node_ids, ctx_left, ctx_right)
+        err = ffi.new("AnnisErrorList **")
+        db = CAPI.annis_cs_subgraph(self.__cs, corpus_name.encode('utf-8'), c_node_ids, ctx_left, ctx_right, err)
+        consume_errors(err)
 
         G = map_graph(db)
 
@@ -74,8 +81,10 @@ class CorpusStorageManager:
         for id in document_ids:
             CAPI.annis_vec_str_push(c_document_ids, id.encode('utf-8'))
 
+        err = ffi.new("AnnisErrorList **")
         db = CAPI.annis_cs_subcorpus_graph(self.__cs, corpus_name.encode('utf-8'), 
-        c_document_ids)
+        c_document_ids, err)
+        consume_errors(err)
 
         G = map_graph(db)
 
@@ -96,13 +105,11 @@ class CorpusStorageManager:
         ...         cs.apply_update('test', g)
         """ 
         
-        result = CAPI.annis_cs_apply_update(self.__cs,
-        corpus_name.encode('utf-8'), update.get_instance())
+        err = ffi.new("AnnisErrorList **")
+        CAPI.annis_cs_apply_update(self.__cs,
+        corpus_name.encode('utf-8'), update.get_instance(), err)
+        consume_errors(err)
 
-        if result != ffi.NULL:
-            msg = ffi.string(CAPI.annis_error_get_msg(result)).decode('utf-8')
-            CAPI.annis_free(result)
-            raise CSException(msg)
 
     def delete_corpus(self, corpus_name : str):
         """ Delete a corpus from the database
@@ -116,21 +123,19 @@ class CorpusStorageManager:
         ...         cs.apply_update('test', g)
         ...     # delete it
         ...     cs.delete_corpus('test')
+        True
         """ 
-        result = CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'))
-        if result != ffi.NULL:
-            msg = ffi.string(CAPI.annis_error_get_msg(result)).decode('utf-8')
-            CAPI.annis_free(result)
-            raise CSException(msg)
+        err = ffi.new("AnnisErrorList **")
+        result = CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'), err)
+        consume_errors(err)
+        return result
 
     def import_relannis(self, corpus_name : str, path):
         """ Import a legacy relANNIS file format into the database
         """ 
         
-        result = CAPI.annis_cs_import_relannis(self.__cs,
-        corpus_name.encode('utf-8'), path.encode('utf-8'))
+        err = ffi.new("AnnisErrorList **")
+        CAPI.annis_cs_import_relannis(self.__cs,
+        corpus_name.encode('utf-8'), path.encode('utf-8'), err)
+        consume_errors(err)
 
-        if result != ffi.NULL:
-            msg = ffi.string(CAPI.annis_error_get_msg(result)).decode('utf-8')
-            CAPI.annis_free(result)
-            raise CSException(msg)

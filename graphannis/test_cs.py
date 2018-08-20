@@ -25,7 +25,7 @@ class TestCorpusStorageManager(unittest.TestCase):
 
     def test_find(self):
         with CorpusStorageManager(self.dataDir) as cs:
-            find_result = cs.find(['GUM'], '{"alternatives":[{"nodes":{"1":{"id":1,"nodeAnnotations":[{"name":"pos","value":"NN","textMatching":"EXACT_EQUAL","qualifiedName":"pos"}],"root":false,"token":false,"variable":"1"}},"joins":[]}]}')
+            find_result = cs.find(['GUM'], 'pos="NN"')
             assert(isinstance(find_result, list))
 
             assert(len(find_result) > 0)
@@ -38,5 +38,21 @@ class TestCorpusStorageManager(unittest.TestCase):
             G = cs.subgraph('GUM', match_uris, 5, 5)
             assert(len(G.nodes) > 0)
             assert(len(G.edges) > 0)
+
+    def test_subcorpus_graph(self):
+        with CorpusStorageManager(self.dataDir) as cs:
+            
+            G = cs.subcorpus_graph('GUM', ['GUM/GUM_whow_skittles'])
+
+            assert(len(G.nodes) > 0)
+            assert(len(G.edges) > 0)
+
+    def test_count(self):
+        with CorpusStorageManager(self.dataDir) as cs:
+            count_result = cs.count(['GUM'], 'pos="NN"')
+            assert(isinstance(count_result, int))
+
+            assert(count_result == 5688)
+
 
 if __name__ == '__main__': unittest.main()
