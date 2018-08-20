@@ -1,3 +1,3 @@
 from graphannis.common import *
 
-__all__ = ['common', 'cs', 'query', 'util']
+__all__ = ['common', 'cs', 'util', 'errors']

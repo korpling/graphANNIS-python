@@ -2,8 +2,8 @@
 
 if __name__ == '__main__':
     import doctest
-    from graphannis import graph, cs, query
+    from graphannis import graph, cs, errors
     import graphannis
     doctest.testmod(graph)
     doctest.testmod(cs)
-    doctest.testmod(query)
+    doctest.testmod(errors)
