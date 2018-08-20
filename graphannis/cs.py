@@ -81,8 +81,10 @@ class CorpusStorageManager:
         for id in document_ids:
             CAPI.annis_vec_str_push(c_document_ids, id.encode('utf-8'))
 
+        err = ffi.new("AnnisErrorList **")
         db = CAPI.annis_cs_subcorpus_graph(self.__cs, corpus_name.encode('utf-8'), 
-        c_document_ids)
+        c_document_ids, err)
+        consume_errors(err)
 
         G = map_graph(db)
 

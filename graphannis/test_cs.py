@@ -39,6 +39,14 @@ class TestCorpusStorageManager(unittest.TestCase):
             assert(len(G.nodes) > 0)
             assert(len(G.edges) > 0)
 
+    def test_subcorpus_graph(self):
+        with CorpusStorageManager(self.dataDir) as cs:
+            
+            G = cs.subcorpus_graph('GUM', ['GUM/GUM_whow_skittles'])
+
+            assert(len(G.nodes) > 0)
+            assert(len(G.edges) > 0)
+
     def test_count(self):
         with CorpusStorageManager(self.dataDir) as cs:
             count_result = cs.count(['GUM'], 'pos="NN"')
