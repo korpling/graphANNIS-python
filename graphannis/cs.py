@@ -22,10 +22,10 @@ class CorpusStorageManager:
     
     def __exit__(self, exc_type, exc_value, traceback):
         CAPI.annis_cs_free(self.__cs)
+        self.__cs = ffi.NULL
 
 
     def list(self):
-
         err = ffi.new("AnnisErrorList **")
         orig = CAPI.annis_cs_list(self.__cs, err)
         consume_errors(err)
