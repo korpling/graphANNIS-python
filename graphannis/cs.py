@@ -26,6 +26,9 @@ class CorpusStorageManager:
 
 
     def list(self):
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
+
         err = ffi.new("AnnisErrorList **")
         orig = CAPI.annis_cs_list(self.__cs, err)
         consume_errors(err)
@@ -39,6 +42,9 @@ class CorpusStorageManager:
         return copy
     
     def count(self, corpora, query_as_aql):
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
+
         result = int(0)
         for c in corpora:
             err = ffi.new("AnnisErrorList **")
@@ -48,6 +54,9 @@ class CorpusStorageManager:
         return result
 
     def find(self, corpora, query_as_aql, offset=0, limit=10, order=ResultOrder.Normal):
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
+
         result = []
         for c in corpora:
             err = ffi.new("AnnisErrorList **")
@@ -61,6 +70,9 @@ class CorpusStorageManager:
         return result
 
     def subgraph(self, corpus_name : str, node_ids, ctx_left=0, ctx_right=0):
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
+
         c_node_ids = CAPI.annis_vec_str_new()
         for nid in node_ids:
             CAPI.annis_vec_str_push(c_node_ids, nid.encode('utf-8'))
@@ -77,6 +89,9 @@ class CorpusStorageManager:
         return G
 
     def subcorpus_graph(self, corpus_name : str, document_ids):
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
+
         c_document_ids = CAPI.annis_vec_str_new()
         for id in document_ids:
             CAPI.annis_vec_str_push(c_document_ids, id.encode('utf-8'))
@@ -125,6 +140,9 @@ class CorpusStorageManager:
         ...     cs.delete_corpus('test')
         True
         """ 
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
+
         err = ffi.new("AnnisErrorList **")
         result = CAPI.annis_cs_delete(self.__cs, corpus_name.encode('utf-8'), err)
         consume_errors(err)
@@ -133,6 +151,8 @@ class CorpusStorageManager:
     def import_relannis(self, corpus_name : str, path):
         """ Import a legacy relANNIS file format into the database
         """ 
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
         
         err = ffi.new("AnnisErrorList **")
         CAPI.annis_cs_import_relannis(self.__cs,
