@@ -10,7 +10,7 @@ How to use in your own scripts
 ------------------------------
 
 GraphANNIS is available as Python3-compatible library from the central PyPI repository: https://pypi.org/project/graphannis/
-You can install it locally with `pip`(https://pip.pypa.io/en/stable/).
+You can install it locally with *pip* (https://pip.pypa.io/en/stable/).
 ```
 pip install graphannis
 ```
