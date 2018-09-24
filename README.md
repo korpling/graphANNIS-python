@@ -19,7 +19,7 @@ On Ubuntu Linux systems the command might be `pip3`for Python 3.
 How to compile
 ---------------
 
-You will need to build and install the graphANNIS library (Rust version) with cargo for your system before you can build the Java project with Maven.
+You will need to build and install the graphANNIS library (Rust version) with cargo for your system before you can package and install the Python project with `setup.py`.
 
 - Install the latest version (at least 1.28.0) of Rust:
 - Clone the graphANNIS library from https://github.com/corpus-tools/graphANNIS/
