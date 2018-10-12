@@ -12,10 +12,12 @@ class ResultOrder(IntEnum):
     Inverted = 1
     Random = 2
 
+class QueryLanguage(IntEnum):
+    AQL = 0
 
 class CorpusStorageManager:
     def __init__(self, db_dir='data/', use_parallel=True):
-        self.__cs = CAPI.annis_cs_new(db_dir.encode('utf-8'), use_parallel)
+        self.__cs = CAPI.annis_cs_with_auto_cache_size(db_dir.encode('utf-8'), use_parallel)
 
     def __enter__(self):
         return self
@@ -48,7 +50,8 @@ class CorpusStorageManager:
         result = int(0)
         for c in corpora:
             err = ffi.new("AnnisErrorList **")
-            result = result + CAPI.annis_cs_count(self.__cs, c.encode('utf-8'), query_as_aql.encode('utf-8'), err)
+            result = result + CAPI.annis_cs_count(self.__cs, c.encode('utf-8'), 
+                query_as_aql.encode('utf-8'), int(QueryLanguage.AQL), err)
             consume_errors(err)
         
         return result
@@ -60,7 +63,9 @@ class CorpusStorageManager:
         result = []
         for c in corpora:
             err = ffi.new("AnnisErrorList **")
-            vec = CAPI.annis_cs_find(self.__cs, c.encode('utf-8'), query_as_aql.encode('utf-8'), offset, limit, int(order), err)
+            vec = CAPI.annis_cs_find(self.__cs, c.encode('utf-8'), 
+                query_as_aql.encode('utf-8'), int(QueryLanguage.AQL),
+                offset, limit, int(order), err)
             consume_errors(err)
 
             vec_size = CAPI.annis_vec_str_size(vec)
