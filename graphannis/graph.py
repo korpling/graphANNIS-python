@@ -5,13 +5,13 @@ from .common import CAPI, ffi
 
 def _get_node_labels(nID, db):
     result = dict()
-    annos = CAPI.annis_graph_node_labels(db, nID)
+    annos = CAPI.annis_graph_annotations_for_node(db, nID)
 
     for i in range(CAPI.annis_vec_annotation_size(annos)):
         a = CAPI.annis_vec_annotation_get(annos, i)
-        ns = CAPI.annis_graph_str(db, a.key.ns)
-        name = CAPI.annis_graph_str(db, a.key.name)
-        val = CAPI.annis_graph_str(db, a.val)
+        ns = CAPI.annis_annotation_ns(a)
+        name = CAPI.annis_annotation_name(a)
+        val = CAPI.annis_annotation_val(a)
 
         if ns != ffi.NULL and name != ffi.NULL:
             if ns == ffi.NULL:
@@ -31,13 +31,13 @@ def _get_edge_labels(db, edge_ptr, component_ptr):
 
     edge = {'source' : edge_ptr.source, 'target' : edge_ptr.target}
 
-    annos = CAPI.annis_graph_edge_labels(db, edge, component_ptr)
+    annos = CAPI.annis_graph_annotations_for_edge(db, edge, component_ptr)
 
     for i in range(CAPI.annis_vec_annotation_size(annos)):
         a = CAPI.annis_vec_annotation_get(annos, i)
-        ns = CAPI.annis_graph_str(db, a.key.ns)
-        name = CAPI.annis_graph_str(db, a.key.name)
-        val = CAPI.annis_graph_str(db, a.val)
+        ns = CAPI.annis_annotation_ns(a)
+        name = CAPI.annis_annotation_name(a)
+        val = CAPI.annis_annotation_val(a)
 
         if ns != ffi.NULL and name != ffi.NULL:
             if ns == ffi.NULL:
