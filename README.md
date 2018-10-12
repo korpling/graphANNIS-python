@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/corpus-tools/graphANNIS-python.svg?branch=develop)](https://travis-ci.org/corpus-tools/graphANNIS-python)
+
 graphANNIS Python Bindings
 ==========
 
