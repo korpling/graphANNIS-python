@@ -6,7 +6,7 @@ with open('README_pypi.md') as f:
     long_description = f.read()
 
 setup(name='graphannis',
-      version='0.9.0',
+      version='0.10.0',
       description='graphANNIS Python API',
       author='Thomas Krause',
       author_email='thomaskrause@posteo.de',
