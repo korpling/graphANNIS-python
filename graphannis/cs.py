@@ -14,6 +14,11 @@ class ResultOrder(IntEnum):
 
 class QueryLanguage(IntEnum):
     AQL = 0
+    AQLQuirksV3 = 1
+
+class ImportFormat(IntEnum):
+    RelANNIS = 0
+
 
 class CorpusStorageManager:
     def __init__(self, db_dir='data/', use_parallel=True):
@@ -153,14 +158,15 @@ class CorpusStorageManager:
         consume_errors(err)
         return result
 
-    def import_relannis(self, corpus_name : str, path):
-        """ Import a legacy relANNIS file format into the database
+    def import_from_fs(self, path, fmt : ImportFormat = ImportFormat.RelANNIS, corpus_name : str = None):
+        """ Import corpus from the file system into the database
         """ 
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
         
         err = ffi.new("AnnisErrorList **")
-        CAPI.annis_cs_import_relannis(self.__cs,
-        corpus_name.encode('utf-8'), path.encode('utf-8'), err)
+        CAPI.annis_cs_import_from_fs(self.__cs,
+        path.encode('utf-8'), fmt, corpus_name.encode('utf-8'), err)
+
         consume_errors(err)
 
