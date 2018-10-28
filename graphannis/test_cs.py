@@ -16,7 +16,7 @@ class TestCorpusStorageManager(unittest.TestCase):
         relannis_dir = os.path.normpath(os.path.realpath(__file__) + '/../../relannis/GUM')
         if not os.path.isdir(self.dataDir + '/GUM' ) and os.path.isdir(relannis_dir):
             with CorpusStorageManager(self.dataDir) as cs:
-                cs.import_relannis('GUM', relannis_dir)
+                cs.import_from_fs(relannis_dir, corpus_name='GUM')
         
     def test_list(self):
         with CorpusStorageManager(self.dataDir) as cs:
