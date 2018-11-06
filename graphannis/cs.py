@@ -10,7 +10,8 @@ from .errors import consume_errors
 class ResultOrder(IntEnum):
     Normal = 0
     Inverted = 1
-    Random = 2
+    Randomized = 2
+    NotSorted = 3
 
 class QueryLanguage(IntEnum):
     AQL = 0
