@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/corpus-tools/graphANNIS-python.svg?branch=develop)](https://travis-ci.org/corpus-tools/graphANNIS-python)
+[![Build Status](https://travis-ci.org/korpling/graphANNIS-python.svg?branch=develop)](https://travis-ci.org/korpling/graphANNIS-python)
 
 graphANNIS Python Bindings
 ==========
@@ -22,7 +22,7 @@ How to compile
 You will need to build and install the graphANNIS library (Rust version) with cargo for your system before you can package and install the Python project with `setup.py`.
 
 - Install the latest version (at least 1.28.0) of Rust:
-- Clone the graphANNIS library from https://github.com/corpus-tools/graphANNIS/
+- Clone the graphANNIS library from https://github.com/korpling/graphANNIS/
 - Execute `cargo build --release --features "c-api"`  in the cloned repository
 - Change to a clone of this graphANNIS Python bindings repository
 - Copy the resulting  shared library file `<graphANNIS-repo>/target/release/libgraphannis.so` (`libgraphannis.dylib` under MacOS X and `graphannis.dll` under Windows) to `graphannis/<platform>/` where the platform is one of the following:
