@@ -25,17 +25,13 @@ class TestCorpusStorageManager(unittest.TestCase):
 
     def test_find(self):
         with CorpusStorageManager(self.dataDir) as cs:
-            find_result = cs.find(['GUM'], 'pos="NN"')
+            find_result = cs.find(['GUM'], 'pos="NN" . pos="NN"')
             assert(isinstance(find_result, list))
 
             assert(len(find_result) > 0)
+            assert(isinstance(find_result[0], list))
 
-            # convert find results to salt URIs
-            match_uris = []
-            for m in find_result:
-                match_uris.append(salt_uri_from_match(m))
-
-            G = cs.subgraph('GUM', match_uris, 5, 5)
+            G = cs.subgraph('GUM', salt_uri_from_match(find_result[0]), 5, 5)
             assert(len(G.nodes) > 0)
             assert(len(G.edges) > 0)
 
