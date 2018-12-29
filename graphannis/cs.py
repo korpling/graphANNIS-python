@@ -77,7 +77,7 @@ class CorpusStorageManager:
             vec_size = CAPI.annis_vec_str_size(vec)
             for i in range(vec_size):
                 result_str = ffi.string(CAPI.annis_vec_str_get(vec, i)).decode('utf-8')
-                result.append(result_str)
+                result.append(result_str.split())
         return result
 
     def subgraph(self, corpus_name : str, node_ids, ctx_left=0, ctx_right=0):

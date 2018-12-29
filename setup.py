@@ -6,11 +6,11 @@ with open('README_pypi.md') as f:
     long_description = f.read()
 
 setup(name='graphannis',
-      version='0.13.0',
+      version='0.14.1',
       description='graphANNIS Python API',
       author='Thomas Krause',
       author_email='thomaskrause@posteo.de',
-      url='https://github.com/corpus-tools/graphANNIS-python/',
+      url='https://github.com/korpling/graphANNIS-python/',
       long_description=long_description,
       long_description_content_type='text/markdown',
       packages=['graphannis'],

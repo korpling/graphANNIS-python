@@ -1,8 +1,7 @@
 env:
   # if GRAPHANNIS_VERSION explicitly set, instead of compiling graphANNIS, the released version will be used 
-  - RUST_VERSION=1.30.1 GRAPHANNIS_VERSION=v0.13.0
-  #- RUST_VERSION=1.30.0  
-
+  - GRAPHANNIS_VERSION=v0.14.1
+  
 
 language: python
 python:
@@ -15,7 +14,7 @@ branches:
   - develop
 
 before_install:
-  - "curl -sSf https://build.travis-ci.org/files/rustup-init.sh | sh -s -- --default-toolchain=$RUST_VERSION -y"
+  - "curl -sSf https://build.travis-ci.org/files/rustup-init.sh | sh -s -- --default-toolchain stable -y"
   - export PATH=$HOME/.cargo/bin:$PATH
   # checkout latest development version of graphANNIS
   - ./package/get-graphannis.sh
@@ -36,7 +35,7 @@ script:
 deploy:
   provider: pypi
   on:
-    repo: corpus-tools/graphANNIS-python
+    repo: korpling/graphANNIS-python
     tags: true
   skip_cleanup: true
 #  server: https://test.pypi.org/legacy/
