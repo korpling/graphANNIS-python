@@ -74,8 +74,6 @@ def _map_edge(G, db, edge_ptr, component_ptr):
     component_type = None
     if component_type_enum == CAPI.Coverage:
         component_type = 'Coverage'
-    elif component_type_enum == CAPI.InverseCoverage:
-        component_type = 'InverseCoverage'
     elif component_type_enum == CAPI.Dominance:
         component_type = 'Dominance'
     elif component_type_enum == CAPI.Pointing:
