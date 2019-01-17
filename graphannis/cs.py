@@ -161,13 +161,25 @@ class CorpusStorageManager:
 
     def import_from_fs(self, path, fmt : ImportFormat = ImportFormat.RelANNIS, corpus_name : str = None):
         """ Import corpus from the file system into the database
+        
+        >>> from graphannis.cs import CorpusStorageManager
+        >>> from graphannis.graph import GraphUpdate 
+        >>> with CorpusStorageManager() as cs:
+        ...     # import relANNIS corpus with automatic name
+        ...     cs.import_from_fs("relannis/GUM")
+        ...     # import with a different name
+        ...     cs.import_from_fs("relannis/GUM", ImportFormat.RelANNIS, "GUM_version_unknown")
         """ 
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
         
         err = ffi.new("AnnisErrorList **")
+        if corpus_name is None:
+            corpus_name = ffi.NULL
+        else:
+            corpus_name = corpus_name.encode('utf-8')
         CAPI.annis_cs_import_from_fs(self.__cs,
-        path.encode('utf-8'), fmt, corpus_name.encode('utf-8'), err)
+        path.encode('utf-8'), fmt, corpus_name, err)
 
         consume_errors(err)
 
