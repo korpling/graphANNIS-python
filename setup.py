@@ -6,7 +6,7 @@ with open('README_pypi.md') as f:
     long_description = f.read()
 
 setup(name='graphannis',
-      version='0.15.0',
+      version='0.16.0',
       description='graphANNIS Python API',
       author='Thomas Krause',
       author_email='thomaskrause@posteo.de',
@@ -19,7 +19,7 @@ setup(name='graphannis',
       cffi_modules=["package/graphannis_build.py:ffibuilder"],
       install_requires=["cffi>=1.0.0","networkx"],
       classifiers=(
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: POSIX :: Linux",
         "Operating System :: MacOS :: MacOS X",
