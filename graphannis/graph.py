@@ -84,8 +84,8 @@ def _map_edge(G, db, edge_ptr, component_ptr):
         component_type = 'LeftToken'
     elif component_type_enum == CAPI.RightToken:
         component_type = 'RightToken'
-    elif component_type_enum == CAPI.PartOfSubcorpus:
-        component_type = 'PartOfSubcorpus'
+    elif component_type_enum == CAPI.PartOf:
+        component_type = 'PartOf'
 
     if component_type != None:
         G.edges[edge_ptr.source, edge_ptr.target, edge_key]['annis::component_type'] = component_type
