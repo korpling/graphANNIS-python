@@ -9,7 +9,6 @@ class ANNISException(Exception):
     def __str__(self):
         return self.message
 
-# TODO: make this work on other platforms (Windows/Mac)
 package_dir = os.path.normpath(os.path.realpath(__file__) + '/..')
 
 lib_file_name = None
@@ -47,6 +46,12 @@ if shared_obj_file == None:
     shared_obj_file = find_library('graphannis')
 
 if shared_obj_file == None:
-    raise ANNISException("Could not find graphannis library in path (e.g. LD_LIBRARY_PATH)")
-
-CAPI = ffi.dlopen(shared_obj_file)
+    on_rtd = os.environ.get('READTHEDOCS') == 'True'
+    
+    # ignore missing shared library when called to create the API documentation
+    if on_rtd:
+        CAPI = None
+    else:
+        raise ANNISException("Could not find graphannis library in path (e.g. LD_LIBRARY_PATH)")
+else:
+    CAPI = ffi.dlopen(shared_obj_file)
