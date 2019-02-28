@@ -1,26 +1,11 @@
 graphannis package
 ==================
 
-graphannis.common module
-------------------------
-
-.. automodule:: graphannis.common
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 graphannis.cs module
 --------------------
 
 .. automodule:: graphannis.cs
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-graphannis.errors module
-------------------------
-
-.. automodule:: graphannis.errors
     :members:
     :undoc-members:
     :show-inheritance:
@@ -33,13 +18,6 @@ graphannis.graph module
     :undoc-members:
     :show-inheritance:
 
-graphannis.test\_cs module
---------------------------
-
-.. automodule:: graphannis.test_cs
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 graphannis.util module
 ----------------------
@@ -50,10 +28,19 @@ graphannis.util module
     :show-inheritance:
 
 
-Module contents
----------------
 
-.. automodule:: graphannis
+graphannis.errors module
+------------------------
+
+.. automodule:: graphannis.errors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+graphannis.common module
+------------------------
+
+.. automodule:: graphannis.common
     :members:
     :undoc-members:
     :show-inheritance:
