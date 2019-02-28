@@ -6,7 +6,7 @@ import os
 
 from .cs import CorpusStorageManager
 from .graph import GraphUpdate
-from .util import salt_uri_from_match
+from .util import node_name_from_match
 import networkx as nx
 
 class TestCorpusStorageManager(unittest.TestCase):
@@ -31,7 +31,7 @@ class TestCorpusStorageManager(unittest.TestCase):
             assert(len(find_result) > 0)
             assert(isinstance(find_result[0], list))
 
-            G = cs.subgraph('GUM', salt_uri_from_match(find_result[0]), 5, 5)
+            G = cs.subgraph('GUM', node_name_from_match(find_result[0]), 5, 5)
             assert(len(G.nodes) > 0)
             assert(len(G.edges) > 0)
 
