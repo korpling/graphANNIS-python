@@ -39,6 +39,7 @@ class CorpusStorageManager:
 
 
     def list(self):
+        """ List all available corpora in the corpus storage. """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -55,7 +56,7 @@ class CorpusStorageManager:
         return copy
     
     def count(self, corpora, query, query_language=QueryLanguage.AQL):
-        """ Execute the given query on the list of corpora and return the number of matches."""
+        """ Count the number of results for a query. """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -70,7 +71,10 @@ class CorpusStorageManager:
         return result
 
     def find(self, corpora, query, query_language=QueryLanguage.AQL, offset=0, limit=10, order=ResultOrder.Normal):
-        """ Execute the given query on the list of corpora and return the list of matched IDs."""
+        """Find all results for a query and return the match ID for each result.
+        The query is paginated and an offset and limit can be specified.
+        Returns a list of match IDs, where each match ID consists of the matched node annotation identifiers separated by spaces.
+        """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -89,7 +93,7 @@ class CorpusStorageManager:
         return result
 
     def subgraph(self, corpus_name : str, node_ids, ctx_left=0, ctx_right=0):
-        """ Return the subgraph for a given corpus and list of node IDs. """
+        """ Return the copy of a subgraph which includes the given list of node annotation identifiers, the nodes that cover the same token as the given nodes and all nodes that cover the token which are part of the defined context. """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -109,6 +113,7 @@ class CorpusStorageManager:
         return G
 
     def subcorpus_graph(self, corpus_name : str, document_ids):
+        """ Return the copy of a subgraph which includes all nodes that belong to any of the given list of sub-corpus/document identifiers. """ 
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
