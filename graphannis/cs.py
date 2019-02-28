@@ -3,7 +3,7 @@ from enum import IntEnum
 
 from .common import CAPI
 from ._ffi import ffi
-from .graph import map_graph
+from .graph import _map_graph as map_graph
 from .errors import consume_errors
 
 
@@ -142,7 +142,7 @@ class CorpusStorageManager:
         
         err = ffi.new("AnnisErrorList **")
         CAPI.annis_cs_apply_update(self.__cs,
-        corpus_name.encode('utf-8'), update.get_instance(), err)
+        corpus_name.encode('utf-8'), update._get_instance(), err)
         consume_errors(err)
 
 
