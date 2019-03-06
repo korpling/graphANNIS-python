@@ -84,13 +84,13 @@ def _map_edge(G, db, edge_ptr, component_ptr):
         component_type = 'LeftToken'
     elif component_type_enum == CAPI.RightToken:
         component_type = 'RightToken'
-    elif component_type_enum == CAPI.PartOfSubcorpus:
-        component_type = 'PartOfSubcorpus'
+    elif component_type_enum == CAPI.PartOf:
+        component_type = 'PartOf'
 
     if component_type != None:
         G.edges[edge_ptr.source, edge_ptr.target, edge_key]['annis::component_type'] = component_type
 
-def map_graph(db):
+def _map_graph(db):
     G = nx.MultiDiGraph()
     if db == ffi.NULL:
         return G
@@ -153,7 +153,7 @@ class GraphUpdate:
     def __exit__(self, exc_type, exc_value, traceback):
         CAPI.annis_free(self.__instance)
 
-    def get_instance(self):
+    def _get_instance(self):
         return self.__instance
 
     def add_node(self, node_name, node_type='node'):

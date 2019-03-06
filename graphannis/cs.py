@@ -3,21 +3,26 @@ from enum import IntEnum
 
 from .common import CAPI
 from ._ffi import ffi
-from .graph import map_graph
+from .graph import _map_graph as map_graph
 from .errors import consume_errors
 
 
 class ResultOrder(IntEnum):
+    """ Defines the ordering of results"""
     Normal = 0
     Inverted = 1
     Randomized = 2
     NotSorted = 3
 
 class QueryLanguage(IntEnum):
+    """ Defines which query language is used """
     AQL = 0
+    """ Default ANNIS Query Language (AQL)"""
     AQLQuirksV3 = 1
+    """ AQL in quirks mode that emulates some of the behavior of ANNIS3 """
 
 class ImportFormat(IntEnum):
+    """ Defines the import format """
     RelANNIS = 0
 
 
@@ -34,6 +39,7 @@ class CorpusStorageManager:
 
 
     def list(self):
+        """ List all available corpora in the corpus storage. """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -49,20 +55,26 @@ class CorpusStorageManager:
             copy.append(corpus_name.decode('utf-8'))
         return copy
     
-    def count(self, corpora, query_as_aql):
+    def count(self, corpora, query, query_language=QueryLanguage.AQL):
+        """ Count the number of results for a query. """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
         result = int(0)
+
         for c in corpora:
             err = ffi.new("AnnisErrorList **")
             result = result + CAPI.annis_cs_count(self.__cs, c.encode('utf-8'), 
-                query_as_aql.encode('utf-8'), int(QueryLanguage.AQL), err)
+                query.encode('utf-8'), int(query_language), err)
             consume_errors(err)
         
         return result
 
-    def find(self, corpora, query_as_aql, offset=0, limit=10, order=ResultOrder.Normal):
+    def find(self, corpora, query, query_language=QueryLanguage.AQL, offset=0, limit=10, order=ResultOrder.Normal):
+        """Find all results for a query and return the match ID for each result.
+        The query is paginated and an offset and limit can be specified.
+        Returns a list of match IDs, where each match ID consists of the matched node annotation identifiers separated by spaces.
+        """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -70,7 +82,7 @@ class CorpusStorageManager:
         for c in corpora:
             err = ffi.new("AnnisErrorList **")
             vec = CAPI.annis_cs_find(self.__cs, c.encode('utf-8'), 
-                query_as_aql.encode('utf-8'), int(QueryLanguage.AQL),
+                query.encode('utf-8'), int(query_language),
                 offset, limit, int(order), err)
             consume_errors(err)
 
@@ -81,6 +93,7 @@ class CorpusStorageManager:
         return result
 
     def subgraph(self, corpus_name : str, node_ids, ctx_left=0, ctx_right=0):
+        """ Return the copy of a subgraph which includes the given list of node annotation identifiers, the nodes that cover the same token as the given nodes and all nodes that cover the token which are part of the defined context. """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -100,6 +113,7 @@ class CorpusStorageManager:
         return G
 
     def subcorpus_graph(self, corpus_name : str, document_ids):
+        """ Return the copy of a subgraph which includes all nodes that belong to any of the given list of sub-corpus/document identifiers. """ 
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -133,7 +147,7 @@ class CorpusStorageManager:
         
         err = ffi.new("AnnisErrorList **")
         CAPI.annis_cs_apply_update(self.__cs,
-        corpus_name.encode('utf-8'), update.get_instance(), err)
+        corpus_name.encode('utf-8'), update._get_instance(), err)
         consume_errors(err)
 
 

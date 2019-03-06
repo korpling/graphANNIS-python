@@ -1,7 +1,13 @@
 import networkx as nx
 import sys, re
 
-def salt_uri_from_match(match):
+def node_name_from_match(match):
+    """ Takes a match identifier (which includes the matched annotation name) and returns the node name. This can take a single string or a list of strings as argument. 
+    
+    >>> m = node_name_from_match("tiger::cat::topcorpus/subcorpus/doc1#n2)
+    >>> m == "topcorpus/subcorpus/doc1#n2"
+
+    """
     if isinstance(match, str):
         elements = re.split('::', match, 3)
         if len(elements) == 3:
@@ -13,7 +19,7 @@ def salt_uri_from_match(match):
     elif isinstance(match, list):
         result = []
         for m in match:
-            result.append(salt_uri_from_match(m))
+            result.append(node_name_from_match(m))
         return result
     else:
         return None

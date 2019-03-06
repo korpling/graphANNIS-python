@@ -16,6 +16,8 @@ pip install graphannis
 ```
 On Ubuntu Linux systems the command might be `pip3`for Python 3.
 
+You can view the [API documentation online](http://graphannis-python.readthedocs.io/).
+
 How to compile
 ---------------
 
