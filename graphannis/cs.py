@@ -28,7 +28,9 @@ class ImportFormat(IntEnum):
 
 class CorpusStorageManager:
     def __init__(self, db_dir='data/', use_parallel=True):
-        self.__cs = CAPI.annis_cs_with_auto_cache_size(db_dir.encode('utf-8'), use_parallel)
+        err = ffi.new("AnnisErrorList **")
+        self.__cs = CAPI.annis_cs_with_auto_cache_size(db_dir.encode('utf-8'), use_parallel, err)
+        consume_errors(err)
 
     def __enter__(self):
         return self
