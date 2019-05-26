@@ -1,6 +1,6 @@
 env:
   # if GRAPHANNIS_VERSION explicitly set, instead of compiling graphANNIS, the released version will be used 
-  - GRAPHANNIS_VERSION=v0.20.0
+  - GRAPHANNIS_VERSION=v0.21.0
   
 
 language: python
