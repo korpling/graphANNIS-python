@@ -9,6 +9,6 @@
     "python.testing.pytestEnabled": false,
     "python.testing.nosetestsEnabled": false,
     "python.testing.unittestEnabled": true,
-    "python.pythonPath": "/usr/bin/python3",
+    "python.pythonPath": "/home/thomas/miniconda3/envs/annis/bin/python",
     "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/"
 }
