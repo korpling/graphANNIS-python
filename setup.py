@@ -2,6 +2,8 @@
 
 import sys
 from setuptools import setup, find_packages, Command
+import urllib.request
+import shutil
 
 # Package meta-data
 VERSION = '0.22.0'
@@ -28,6 +30,25 @@ class CoreLibraryCommand(Command):
     def run(self):
         self.status('Downloading released graphANNIS ' +
                     VERSION + ' core library binaries')
+
+        self.status('libgraphannis.so (Linux)')
+        url = 'https://github.com/korpling/graphANNIS/releases/download/v' + CORE_VERSION + '/libgraphannis.so'
+        file = 'graphannis/linux-x86-64/libgraphannis.so'
+        with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+
+        self.status('graphannis.dll (Windows)')
+        url = 'https://github.com/korpling/graphANNIS/releases/download/v' + CORE_VERSION + '/graphannis.dll'
+        file = 'graphannis/win32-x86-64/raphannis.dll'
+        with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+
+
+        self.status('libgraphannis.dylib (OSX)')
+        url = 'https://github.com/korpling/graphANNIS/releases/download/v' + CORE_VERSION + '/libgraphannis.dylib'
+        file = 'graphannis/darwin-x86-64/libgraphannis.dylib'
+        with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
 
         sys.exit()
 
