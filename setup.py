@@ -14,32 +14,25 @@ CORE_VERSION = '0.22.0'  # graphANNIS core library version
 with open('README_pypi.md') as f:
     long_description = f.read()
 
-print('Downloading released graphANNIS ' +
-            VERSION + ' core library binaries')
 
-print('libgraphannis.so (Linux)')
-url = 'https://github.com/korpling/graphANNIS/releases/download/v' + \
-    CORE_VERSION + '/libgraphannis.so'
-file = 'graphannis/linux-x86-64/libgraphannis.so'
-if not os.path.isfile(file):
-    with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
-        shutil.copyfileobj(response, out_file)
-
-print('graphannis.dll (Windows)')
-url = 'https://github.com/korpling/graphANNIS/releases/download/v' + \
-    CORE_VERSION + '/graphannis.dll'
-file = 'graphannis/win32-x86-64/raphannis.dll'
-if not os.path.isfile(file):
-    with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
-        shutil.copyfileobj(response, out_file)
-
-print('libgraphannis.dylib (OSX)')
-url = 'https://github.com/korpling/graphANNIS/releases/download/v' + \
+CORE_FILES = {
+  'linux-x86-64/libgraphannis.so' : 'https://github.com/korpling/graphANNIS/releases/download/v' + \
+    CORE_VERSION + '/libgraphannis.so',
+  'win32-x86-64/graphannis.dll' : 'https://github.com/korpling/graphANNIS/releases/download/v' + \
+    CORE_VERSION + '/graphannis.dll',
+  'darwin-x86-64/libgraphannis.dylib': 'https://github.com/korpling/graphANNIS/releases/download/v' + \
     CORE_VERSION + '/libgraphannis.dylib'
-file = 'graphannis/darwin-x86-64/libgraphannis.dylib'
-if not os.path.isfile(file):
-    with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
-        shutil.copyfileobj(response, out_file)
+}
+
+print('Downloading released graphANNIS ' +
+      VERSION + ' core library binaries')
+for file, url in CORE_FILES.items():
+  file = 'graphannis/' + file
+  if not os.path.isfile(file):
+      print("Downloading " + url)
+      with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
+          shutil.copyfileobj(response, out_file)
+
 print("Finished downloading core library files")
 
 
