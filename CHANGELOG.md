@@ -3,7 +3,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-
 ### Changed
 
-- From this version on, graphANNIS-java follows its own versioning scheme independent of the graphANNIS core library.
+-  From this version on, graphANNIS-java follows its own versioning scheme independent of the graphANNIS core library.
