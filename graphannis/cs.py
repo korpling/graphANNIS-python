@@ -103,6 +103,8 @@ class CorpusStorageManager:
     def frequency(self, corpus_name, query, definition, query_language=QueryLanguage.AQL):
         """ Execute a frequency query. 
 
+        :param corpus_name: The name of the corpus (not a list)
+        :param query:       Query in the specified query language (per default AQL)
         :param definition:  A comma seperated list of single frequency definition items as string.
                             Each frequency definition must consist of two parts: the name of referenced node and the (possible qualified) annotation name or "tok" separated by ":".
                             E.g. a frequency definition like::
@@ -111,7 +113,9 @@ class CorpusStorageManager:
 
                             would extract the token value for the node #1, the pos annotation for node #3 and the 
                             pos annotation in the tiger namespace for node #4.
-        :return: A frequency table
+        :param query_language: Optional query language (AQL per default)
+        :return: A frequency table which is a list of named tuples. The named tuples have the field **values** which is a list 
+                 with the actual values for this entry and **count** with the number of occurences for these value combination.
         """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
