@@ -2,8 +2,6 @@
 
 import sys
 from setuptools import setup, find_packages
-from distutils.command.build import build as build_orig
-from setuptools.command.test import test as test_orig
 from distutils.command.clean import clean as clean_orig
 import urllib.request
 import shutil
@@ -29,28 +27,14 @@ CORE_FILES = {
 }
 
 
-def download_core_files():
-    for file, url in CORE_FILES.items():
+
+if not "clean" in sys.argv:
+  for file, url in CORE_FILES.items():
         file = os.path.join('graphannis', file)
         if not os.path.isfile(file):
             print("Downloading " + url)
             with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
                 shutil.copyfileobj(response, out_file)
-
-
-class build(build_orig):
-
-    def run(self):
-        download_core_files()
-        super().run()
-
-
-class test(test_orig):
-
-    def run(self):
-        download_core_files()
-        super().run()
-
 
 class clean(clean_orig):
 
@@ -83,5 +67,5 @@ setup(name='graphannis',
           "Operating System :: MacOS :: MacOS X",
           "Operating System :: Microsoft :: Windows"
       ),
-      cmdclass={"clean": clean, "build": build, "test": test}
+      cmdclass={"clean": clean}
       )
