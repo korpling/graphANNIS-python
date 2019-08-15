@@ -26,6 +26,6 @@ if __name__ == "__main__":
             release_tag = release_tag[1:]
         
         version_header = '## [{}] - {} '.format(release_tag, time.strftime("%Y-%m-%d"))
-        replace_in_file('CHANGELOG.md', {'## \[Unreleased\]' : '## [Unreleased]\n\n' + version_header })
+        replace_in_file('CHANGELOG.md', {'## \[Unreleased\]' : version_header })
     else:
         print("Not updating CHANGELOG.md since TRAVIS_TAG environment variable was not set")
