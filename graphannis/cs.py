@@ -94,6 +94,22 @@ class CorpusStorageManager:
                 result.append(result_str.split())
         return result
 
+    
+    def frequency(self, corpus_name, query, definition, query_language=QueryLanguage.AQL):
+        """ Execute a frequency query. 
+        
+        :param definition:  A comma seperated list of single frequency definition items as string.
+                            Each frequency definition must consist of two parts: the name of referenced node and the (possible qualified) annotation name or "tok" separated by ":".
+                            E.g. a frequency definition like::
+
+                                1:tok,3:pos,4:tiger::pos
+                                
+                            would extract the token value for the node #1, the pos annotation for node #3 and the 
+                            pos annotation in the tiger namespace for node #4.
+        :return: A frequency table
+        """
+        pass
+
     def subgraph(self, corpus_name : str, node_ids, ctx_left=0, ctx_right=0):
         """ Return the copy of a subgraph which includes the given list of node annotation identifiers, the nodes that cover the same token as the given nodes and all nodes that cover the token which are part of the defined context. """
         if self.__cs is None or self.__cs == ffi.NULL:
