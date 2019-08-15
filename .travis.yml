@@ -1,8 +1,3 @@
-env:
-  # if GRAPHANNIS_VERSION explicitly set, instead of compiling graphANNIS, the released version will be used 
-  - GRAPHANNIS_VERSION=v0.22.0
-  
-
 language: python
 python:
 - '3.6'
@@ -13,21 +8,11 @@ branches:
   - test-release-tag-please-ignore
   - develop
 
-before_install:
-  - "curl -sSf https://build.travis-ci.org/files/rustup-init.sh | sh -s -- --default-toolchain stable -y"
-  - export PATH=$HOME/.cargo/bin:$PATH
-  # checkout latest development version of graphANNIS
-  - ./package/get-graphannis.sh
-
-cache: 
-  directories:
-  - $HOME/.cargo
-  - $HOME/.cache/pip
-
 install:
 - pip install cffi networkx
 
 script:
+- python setup.py build
 - "./package/download-gum-corpus.sh"
 - "./doctest_runner.py"
 - python -m unittest
