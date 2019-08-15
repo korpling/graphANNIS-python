@@ -17,6 +17,9 @@ script:
 - "./doctest_runner.py"
 - python -m unittest
 
+before_deploy:
+  - ./package/update_changelog.py
+
 deploy:
   provider: pypi
   on:
