@@ -3,8 +3,8 @@
 graphANNIS Python Bindings
 ==========
 
-GraphANNIS is a library for corpus linguistic queries.
-This are the Python bindings to its API.
+GraphANNIS is a library for corpus linguistic queries and these are the Python bindings to **graphANNIS core library version 0.22.0**.
+
 
 How to use in your own scripts
 ------------------------------

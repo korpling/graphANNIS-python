@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import re
 from setuptools import setup, find_packages
 from distutils.command.clean import clean as clean_orig
 import urllib.request
@@ -12,11 +13,6 @@ import os.path
 VERSION = '0.22.0'
 CORE_VERSION = '0.22.0'  # graphANNIS core library version
 
-
-with open('README_pypi.md') as f:
-    long_description = f.read()
-
-
 CORE_FILES = {
     'linux-x86-64/libgraphannis.so': 'https://github.com/korpling/graphANNIS/releases/download/v' +
     CORE_VERSION + '/libgraphannis.so',
@@ -26,6 +22,25 @@ CORE_FILES = {
     CORE_VERSION + '/libgraphannis.dylib'
 }
 
+def replace_in_file(file, replacements):
+  if len(replacements) == 0:
+    return
+  content = None
+  with open(file, "r") as f_in:
+    content = f_in.read()
+  if content:
+    for pattern, repl in replacements.items():
+      content = re.sub(pattern, repl, content)
+    with open(file, "w") as f_out:
+      f_out.write(content)
+
+
+# Update version information in README.md
+replace_in_file("README.md", {'graphANNIS core library version ([0-9]+\.[0-9]+\.[0-9]+)' : 'graphANNIS core library version ' + CORE_VERSION})
+replace_in_file("README_pypi.md", {'graphANNIS core library version ([0-9]+\.[0-9]+\.[0-9]+)' : 'graphANNIS core library version ' + CORE_VERSION})
+
+with open('README_pypi.md') as f:
+    long_description = f.read()
 
 
 if not "clean" in sys.argv:
