@@ -50,5 +50,16 @@ class TestCorpusStorageManager(unittest.TestCase):
 
             assert(count_result == 5688)
 
+    def test_frequency(self):
+        with CorpusStorageManager(self.dataDir) as cs:
+            ft = cs.frequency('GUM', 'pos . pos', '1:pos,2:pos')
+            
+            assert(len(ft) > 0)
+            assert(ft[0].count > 0)
+            assert(type(ft[0].values) == list)
+            assert(len(ft[0].values) == 2)
+            assert(type(ft[0].values[0] == str))
+            assert(type(ft[0].values[1] == str))
+
 
 if __name__ == '__main__': unittest.main()
