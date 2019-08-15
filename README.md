@@ -46,7 +46,7 @@ To compile graphANNIS on your own (e.g. for using a non-released version)
     - changing the `VERSION` field in the `setup.py` file
     - specifying the corresponding graphANNIS release tag in the `CORE_VERSION` field in the `setup.py` file
     - committing the changed files
-3. **Prepare the release (including tests)** by executing `./release_prepare.sh`.
+3. **Prepare the release (including executing tests)** by executing `./release_prepare.sh`.
 4. Check if there where no test errors and **Commit** the changes created by release preparation script.
 5. **Tag and push** the latest commit with the prefix `v`, e.g. `v1.4.0`, **merge** the release branch both into the `master` and `develop` branch then delete the release branch.
 
