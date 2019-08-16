@@ -2,7 +2,9 @@
 
 import sys
 import re
+import time
 from setuptools import setup, find_packages
+import distutils.cmd
 from distutils.command.clean import clean as clean_orig
 import urllib.request
 import shutil
@@ -22,34 +24,38 @@ CORE_FILES = {
     CORE_VERSION + '/libgraphannis.dylib'
 }
 
+
 def replace_in_file(file, replacements):
-  if len(replacements) == 0:
-    return
-  content = None
-  with open(file, "r") as f_in:
-    content = f_in.read()
-  if content:
-    for pattern, repl in replacements.items():
-      content = re.sub(pattern, repl, content)
-    with open(file, "w") as f_out:
-      f_out.write(content)
+    if len(replacements) == 0:
+        return
+    content = None
+    with open(file, "r") as f_in:
+        content = f_in.read()
+    if content:
+        for pattern, repl in replacements.items():
+            content = re.sub(pattern, repl, content)
+        with open(file, "w") as f_out:
+            f_out.write(content)
 
 
 # Update version information in README.md
-replace_in_file("README.md", {'graphANNIS core library version ([0-9]+\.[0-9]+\.[0-9]+)' : 'graphANNIS core library version ' + CORE_VERSION})
-replace_in_file("README_pypi.md", {'graphANNIS core library version ([0-9]+\.[0-9]+\.[0-9]+)' : 'graphANNIS core library version ' + CORE_VERSION})
+replace_in_file("README.md", {
+                'graphANNIS core library version ([0-9]+\.[0-9]+\.[0-9]+)': 'graphANNIS core library version ' + CORE_VERSION})
+replace_in_file("README_pypi.md", {
+                'graphANNIS core library version ([0-9]+\.[0-9]+\.[0-9]+)': 'graphANNIS core library version ' + CORE_VERSION})
 
 with open('README_pypi.md') as f:
     long_description = f.read()
 
 
 if not "clean" in sys.argv:
-  for file, url in CORE_FILES.items():
+    for file, url in CORE_FILES.items():
         file = os.path.join('graphannis', file)
         if not os.path.isfile(file):
             print("Downloading " + url)
             with urllib.request.urlopen(url) as response, open(file, 'wb') as out_file:
                 shutil.copyfileobj(response, out_file)
+
 
 class clean(clean_orig):
 
@@ -60,6 +66,23 @@ class clean(clean_orig):
                 print(file)
                 os.remove(file)
         super().run()
+
+
+class update_changelog(distutils.cmd.Command):
+    description = 'Update changelog to release the current version number'
+    user_options = []
+
+    def run(self):
+        version_header = '## [{}] - {} '.format(
+            CORE_VERSION, time.strftime("%Y-%m-%d"))
+        replace_in_file('CHANGELOG.md', {
+                        '## \[Unreleased\]': '## [Unreleased]\n\n' + version_header})
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
 
 
 setup(name='graphannis',
@@ -82,5 +105,5 @@ setup(name='graphannis',
           "Operating System :: MacOS :: MacOS X",
           "Operating System :: Microsoft :: Windows"
       ),
-      cmdclass={"clean": clean}
+      cmdclass={"clean": clean, "update_changelog": update_changelog}
       )
