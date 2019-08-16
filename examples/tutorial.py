@@ -45,12 +45,12 @@ with CorpusStorageManager() as cs:
     # this now includes the "tutorial"
     print(cs.list())
 
-    number_of_matches = cs.count(["tutorial"], 'tok=/.*s.*/')
+    number_of_matches = cs.count("tutorial", 'tok=/.*s.*/')
     print(number_of_matches)
-    matches = cs.find(["tutorial"], 'tok=/.*s.*/', offset=0, limit=100)
+    matches = cs.find("tutorial", 'tok=/.*s.*/', offset=0, limit=100)
     print(matches)
 
-    matches = cs.find(["tutorial"], 'tok . tok', offset=0, limit=100)
+    matches = cs.find("tutorial", 'tok . tok', offset=0, limit=100)
     for m in matches:
         print(m)
         G = cs.subgraph("tutorial", node_name_from_match(m), ctx_left=2, ctx_right=2)
