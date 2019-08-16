@@ -74,7 +74,7 @@ class update_changelog(distutils.cmd.Command):
 
     def run(self):
         version_header = '## [{}] - {} '.format(
-            CORE_VERSION, time.strftime("%Y-%m-%d"))
+            VERSION, time.strftime("%Y-%m-%d"))
         replace_in_file('CHANGELOG.md', {
                         '## \[Unreleased\]': '## [Unreleased]\n\n' + version_header})
 
