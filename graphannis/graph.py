@@ -90,7 +90,7 @@ def _map_edge(G, db, edge_ptr, component_ptr):
     if component_type != None:
         G.edges[edge_ptr.source, edge_ptr.target, edge_key]['annis::component_type'] = component_type
 
-def _map_graph(db):
+def _map_graph(db) -> nx.MultiDiGraph:
     G = nx.MultiDiGraph()
     if db == ffi.NULL:
         return G

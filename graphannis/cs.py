@@ -1,6 +1,7 @@
 import typing
 from enum import IntEnum
 from collections import namedtuple
+import networkx as nx
 
 from .common import CAPI
 from ._ffi import ffi
@@ -120,19 +121,18 @@ class CorpusStorageManager:
             return None
 
         result = []
-        for c in corpora:
-            err = ffi.new("AnnisErrorList **")
-            vec = CAPI.annis_cs_find(self.__cs, c.encode('utf-8'),
-                                     query.encode(
-                                         'utf-8'), int(query_language),
-                                     offset, limit, int(order), err)
-            consume_errors(err)
+        err = ffi.new("AnnisErrorList **")
+        vec = CAPI.annis_cs_find(self.__cs, corpus_name.encode('utf-8'),
+                                    query.encode(
+                                        'utf-8'), int(query_language),
+                                    offset, limit, int(order), err)
+        consume_errors(err)
 
-            vec_size = CAPI.annis_vec_str_size(vec)
-            for i in range(vec_size):
-                result_str = ffi.string(
-                    CAPI.annis_vec_str_get(vec, i)).decode('utf-8')
-                result.append(result_str.split())
+        vec_size = CAPI.annis_vec_str_size(vec)
+        for i in range(vec_size):
+            result_str = ffi.string(
+                CAPI.annis_vec_str_get(vec, i)).decode('utf-8')
+            result.append(result_str.split())
         return result
 
     def frequency(self, corpus_name, query, definition, query_language=QueryLanguage.AQL):
@@ -174,8 +174,17 @@ class CorpusStorageManager:
 
         return result
 
-    def subgraph(self, corpus_name: str, node_ids, ctx_left=0, ctx_right=0):
-        """ Return the copy of a subgraph which includes the given list of node annotation identifiers, the nodes that cover the same token as the given nodes and all nodes that cover the token which are part of the defined context. """
+    def subgraph(self, corpus_name: str, node_ids, ctx_left=0, ctx_right=0) -> nx.MultiDiGraph:
+        """ Return the copy of a subgraph which includes the given list of node annotation identifiers, 
+        the nodes that cover the same token as the given nodes and all nodes that cover the token 
+        which are part of the defined context. 
+
+        :param corpus_name: The name of the corpus for which the subgraph should be generated from.
+        :param node_ids: A list of node annotation identifiers describing the subgraph.
+        :param ctx_left: Left context in token distance to be included in the subgraph.
+        :param ctx_right: Right context in token distance to be included in the subgraph.
+        
+        """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
@@ -196,7 +205,10 @@ class CorpusStorageManager:
         return G
 
     def subcorpus_graph(self, corpus_name: str, document_ids):
-        """ Return the copy of a subgraph which includes all nodes that belong to any of the given list of sub-corpus/document identifiers. """
+        """ Return the copy of a subgraph which includes all nodes that belong to any of the given list of sub-corpus/document identifiers. 
+        :param corpus_name:  The name of the corpus for which the subgraph should be generated from.
+        :param document_ids: A list of sub-corpus/document identifiers describing the subgraph.
+        """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
