@@ -25,7 +25,7 @@ class TestCorpusStorageManager(unittest.TestCase):
 
     def test_find(self):
         with CorpusStorageManager(self.dataDir) as cs:
-            find_result = cs.find(['GUM'], 'pos="NN" . pos="NN"')
+            find_result = cs.find('GUM', 'pos="NN" . pos="NN"')
             assert(isinstance(find_result, list))
 
             assert(len(find_result) > 0)
