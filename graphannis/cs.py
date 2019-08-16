@@ -31,6 +31,7 @@ class ImportFormat(IntEnum):
 
 FrequencyTableEntry = namedtuple("FrequencyTableEntry", "values count")
 
+CountExtra = namedtuple("CountExtra", "match_count document_count")
 
 class CorpusStorageManager:
     def __init__(self, db_dir='data/', use_parallel=True):
@@ -78,10 +79,29 @@ class CorpusStorageManager:
 
         err = ffi.new("AnnisErrorList **")
         result = result + CAPI.annis_cs_count(self.__cs, corpus_name.encode('utf-8'),
-                                                query.encode('utf-8'), int(query_language), err)
+                                              query.encode('utf-8'), int(query_language), err)
         consume_errors(err)
 
         return result
+
+    def count_extra(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL):
+        """ Count the number of results for a `query` and return both the total number of matches and also the number of documents in the result set.
+
+        :param corpus_name: The name of the corpus to execute the query on.
+        :param query:  The query as string.
+        :param query_language: The query language of the query (e.g. AQL).
+        :return: The count of matches and documents.
+        """
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
+
+        err = ffi.new("AnnisErrorList **")
+        result = CAPI.annis_cs_count_extra(self.__cs, corpus_name.encode('utf-8'),
+                                           query.encode('utf-8'), int(query_language), err)
+
+        consume_errors(err)
+
+        return CountExtra(match_count=result.match_count, document_count=result.document_count)
 
     def find(self, corpora, query: str, query_language=QueryLanguage.AQL, offset=0, limit=10, order=ResultOrder.Normal):
         """Find all results for a query and return the match ID for each result.

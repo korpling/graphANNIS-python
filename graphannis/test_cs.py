@@ -50,6 +50,16 @@ class TestCorpusStorageManager(unittest.TestCase):
 
             assert(count_result == 5688)
 
+    def test_count_extra(self):
+        with CorpusStorageManager(self.dataDir) as cs:
+            count_result = cs.count_extra('GUM', 'pos="NN"')
+            assert(isinstance(count_result, tuple))
+            assert(isinstance(count_result.match_count, int))
+            assert(isinstance(count_result.document_count, int))
+
+            assert(count_result.match_count == 5688)
+            assert(count_result.document_count == 54)
+
     def test_frequency(self):
         with CorpusStorageManager(self.dataDir) as cs:
             ft = cs.frequency('GUM', 'pos . pos', '1:pos,2:pos')
