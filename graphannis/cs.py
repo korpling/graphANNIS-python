@@ -33,6 +33,7 @@ FrequencyTableEntry = namedtuple("FrequencyTableEntry", "values count")
 
 CountExtra = namedtuple("CountExtra", "match_count document_count")
 
+
 class CorpusStorageManager:
     def __init__(self, db_dir='data/', use_parallel=True):
         err = ffi.new("AnnisErrorList **")
@@ -64,7 +65,7 @@ class CorpusStorageManager:
             copy.append(corpus_name.decode('utf-8'))
         return copy
 
-    def count(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL):
+    def count(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL) -> int:
         """ Count the number of results for a query. 
 
         :param corpus_name: The name of the corpus to execute the query on.
@@ -84,7 +85,7 @@ class CorpusStorageManager:
 
         return result
 
-    def count_extra(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL):
+    def count_extra(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL) -> CountExtra:
         """ Count the number of results for a `query` and return both the total number of matches and also the number of documents in the result set.
 
         :param corpus_name: The name of the corpus to execute the query on.
@@ -103,10 +104,17 @@ class CorpusStorageManager:
 
         return CountExtra(match_count=result.match_count, document_count=result.document_count)
 
-    def find(self, corpora, query: str, query_language=QueryLanguage.AQL, offset=0, limit=10, order=ResultOrder.Normal):
-        """Find all results for a query and return the match ID for each result.
-        The query is paginated and an offset and limit can be specified.
-        Returns a list of match IDs, where each match ID consists of the matched node annotation identifiers separated by spaces.
+    def find(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL, offset=0, limit=10, order: ResultOrder = ResultOrder.Normal):
+        """Find all results for a `query` and return the match ID for each result.
+
+        :param corpus_name: The name of the corpus to execute the query on.
+        :param query: The query as string.
+        :param query_language: The query language of the query (e.g. AQL).
+        :param offset: Skip the `n` first results, where `n` is the offset.
+        :param limit: Return at most `n` matches, where `n` is the limit.
+        :param order: Specify the order of the matches.
+        :return: A list of match IDs, where each match ID consists of the matched node annotation identifiers separated by spaces.
+                You can use the :py:meth:`subgraph` method to get the subgraph for a single match described by the node annnotation identifiers.
         """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
