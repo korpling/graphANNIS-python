@@ -204,7 +204,7 @@ class CorpusStorageManager:
 
         return G
 
-    def subcorpus_graph(self, corpus_name: str, document_ids):
+    def subcorpus_graph(self, corpus_name: str, document_ids) -> nx.MultiDiGraph:
         """ Return the copy of a subgraph which includes all nodes that belong to any of the given list of sub-corpus/document identifiers. 
         :param corpus_name:  The name of the corpus for which the subgraph should be generated from.
         :param document_ids: A list of sub-corpus/document identifiers describing the subgraph.
@@ -230,7 +230,11 @@ class CorpusStorageManager:
 
     def apply_update(self, corpus_name: str, update):
         """ Apply a sequence of updates (`update` parameter) to this graph for a corpus given by the `corpus_name` parameter.
+    
         It is ensured that the update process is atomic and that the changes are persisted to disk if the no exceptions are thrown.
+
+        :param corpus_name: The name of the corpus to apply the update on.
+        :param update: List with elements of the type :py:class:`graphannis.graph.GraphUpdate`. 
 
         >>> from graphannis.cs import CorpusStorageManager
         >>> from graphannis.graph import GraphUpdate 
