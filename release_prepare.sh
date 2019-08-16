@@ -8,4 +8,4 @@ python3 -m unittest
 echo "Running documentation tests"
 ./doctest_runner.py
 echo "Updating changelog header"
-python3 python3 setup.py update_changelog
+python3 setup.py update_changelog
