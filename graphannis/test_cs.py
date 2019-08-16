@@ -45,7 +45,7 @@ class TestCorpusStorageManager(unittest.TestCase):
 
     def test_count(self):
         with CorpusStorageManager(self.dataDir) as cs:
-            count_result = cs.count(['GUM'], 'pos="NN"')
+            count_result = cs.count('GUM', 'pos="NN"')
             assert(isinstance(count_result, int))
 
             assert(count_result == 5688)

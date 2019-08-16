@@ -28,7 +28,9 @@ class ImportFormat(IntEnum):
     """ Defines the import format """
     RelANNIS = 0
 
+
 FrequencyTableEntry = namedtuple("FrequencyTableEntry", "values count")
+
 
 class CorpusStorageManager:
     def __init__(self, db_dir='data/', use_parallel=True):
@@ -61,22 +63,27 @@ class CorpusStorageManager:
             copy.append(corpus_name.decode('utf-8'))
         return copy
 
-    def count(self, corpora, query, query_language=QueryLanguage.AQL):
-        """ Count the number of results for a query. """
+    def count(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL):
+        """ Count the number of results for a query. 
+
+        :param corpus_name: The name of the corpus to execute the query on.
+        :param query:  The query as string.
+        :param query_language: The query language of the query (e.g. AQL).
+        :return: The count of matches as number.
+        """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
         result = int(0)
 
-        for c in corpora:
-            err = ffi.new("AnnisErrorList **")
-            result = result + CAPI.annis_cs_count(self.__cs, c.encode('utf-8'),
-                                                  query.encode('utf-8'), int(query_language), err)
-            consume_errors(err)
+        err = ffi.new("AnnisErrorList **")
+        result = result + CAPI.annis_cs_count(self.__cs, corpus_name.encode('utf-8'),
+                                                query.encode('utf-8'), int(query_language), err)
+        consume_errors(err)
 
         return result
 
-    def find(self, corpora, query, query_language=QueryLanguage.AQL, offset=0, limit=10, order=ResultOrder.Normal):
+    def find(self, corpora, query: str, query_language=QueryLanguage.AQL, offset=0, limit=10, order=ResultOrder.Normal):
         """Find all results for a query and return the match ID for each result.
         The query is paginated and an offset and limit can be specified.
         Returns a list of match IDs, where each match ID consists of the matched node annotation identifiers separated by spaces.
@@ -122,9 +129,9 @@ class CorpusStorageManager:
 
         err = ffi.new("AnnisErrorList **")
         ft = CAPI.annis_cs_frequency(self.__cs, corpus_name.encode('utf-8'),
-                                query.encode('utf-8'), int(query_language), definition.encode('utf-8'), err)
+                                     query.encode('utf-8'), int(query_language), definition.encode('utf-8'), err)
         consume_errors(err)
-        
+
         # return a list containing a tuple (the different values) and their count
         result = []
         ncols = CAPI.annis_freqtable_str_ncols(ft)
@@ -133,11 +140,12 @@ class CorpusStorageManager:
             for j in range(0, ncols):
                 v = ffi.string(CAPI.annis_freqtable_str_get(ft, i, j))
                 values.append(v.decode('utf-8'))
-            entry = FrequencyTableEntry(values=values, count=CAPI.annis_freqtable_str_count(ft, i))
+            entry = FrequencyTableEntry(
+                values=values, count=CAPI.annis_freqtable_str_count(ft, i))
             result.append(entry)
 
         return result
-            
+
     def subgraph(self, corpus_name: str, node_ids, ctx_left=0, ctx_right=0):
         """ Return the copy of a subgraph which includes the given list of node annotation identifiers, the nodes that cover the same token as the given nodes and all nodes that cover the token which are part of the defined context. """
         if self.__cs is None or self.__cs == ffi.NULL:
@@ -181,7 +189,8 @@ class CorpusStorageManager:
         return G
 
     def apply_update(self, corpus_name: str, update):
-        """ Atomically apply update (add/delete nodes, edges and labels) to the database
+        """ Apply a sequence of updates (`update` parameter) to this graph for a corpus given by the `corpus_name` parameter.
+        It is ensured that the update process is atomic and that the changes are persisted to disk if the no exceptions are thrown.
 
         >>> from graphannis.cs import CorpusStorageManager
         >>> from graphannis.graph import GraphUpdate 
