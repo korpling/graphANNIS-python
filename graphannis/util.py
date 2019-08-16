@@ -4,7 +4,7 @@ import sys, re
 def node_name_from_match(match):
     """ Takes a match identifier (which includes the matched annotation name) and returns the node name. This can take a single string or a list of strings as argument. 
     
-    >>> m = node_name_from_match("tiger::cat::topcorpus/subcorpus/doc1#n2)
+    >>> m = node_name_from_match("tiger::cat::topcorpus/subcorpus/doc1#n2")
     >>> m == "topcorpus/subcorpus/doc1#n2"
 
     """
