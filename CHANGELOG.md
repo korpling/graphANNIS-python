@@ -3,6 +3,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-  `frequency(...)` did not return all rows, but used the number of columns internally
+
 ## [0.23.0] - 2019-08-16 
 
 ### Changed
