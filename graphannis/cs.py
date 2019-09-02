@@ -163,7 +163,7 @@ class CorpusStorageManager:
         # return a list containing a tuple (the different values) and their count
         result = []
         ncols = CAPI.annis_freqtable_str_ncols(ft)
-        for i in range(0, CAPI.annis_freqtable_str_ncols(ft)):
+        for i in range(0, CAPI.annis_freqtable_str_nrows(ft)):
             values = []
             for j in range(0, ncols):
                 v = ffi.string(CAPI.annis_freqtable_str_get(ft, i, j))
