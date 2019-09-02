@@ -70,6 +70,17 @@ class TestCorpusStorageManager(unittest.TestCase):
             assert(len(ft[0].values) == 2)
             assert(type(ft[0].values[0] == str))
             assert(type(ft[0].values[1] == str))
+    
+    def test_frequency_non_existing_value(self):
+        with CorpusStorageManager(self.dataDir) as cs:
+            ft = cs.frequency('GUM', 'tok="the" . pos', '1:puff,2:paff')
+            
+            assert(len(ft) > 0)
+            assert(ft[0].count > 0)
+            assert(type(ft[0].values) == list)
+            assert(len(ft[0].values) == 2)
+            assert(type(ft[0].values[0] == str))
+            assert(type(ft[0].values[1] == str))
 
 
 if __name__ == '__main__': unittest.main()
