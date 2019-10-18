@@ -3,6 +3,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Subgraph now accepts a segmentation name as context parameter.
+
 ## [0.23.1] - 2019-09-02 
 
 ### Fixed

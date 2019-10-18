@@ -123,9 +123,9 @@ class CorpusStorageManager:
         result = []
         err = ffi.new("AnnisErrorList **")
         vec = CAPI.annis_cs_find(self.__cs, corpus_name.encode('utf-8'),
-                                    query.encode(
-                                        'utf-8'), int(query_language),
-                                    offset, limit, int(order), err)
+                                 query.encode(
+            'utf-8'), int(query_language),
+            offset, limit, int(order), err)
         consume_errors(err)
 
         vec_size = CAPI.annis_vec_str_size(vec)
@@ -174,7 +174,7 @@ class CorpusStorageManager:
 
         return result
 
-    def subgraph(self, corpus_name: str, node_ids, ctx_left=0, ctx_right=0, segmentation = None) -> nx.MultiDiGraph:
+    def subgraph(self, corpus_name: str, node_ids, ctx_left=0, ctx_right=0, segmentation=None) -> nx.MultiDiGraph:
         """ Return the copy of a subgraph which includes the given list of node annotation identifiers, 
         the nodes that cover the same token as the given nodes and all nodes that cover the token 
         which are part of the defined context. 
@@ -184,8 +184,8 @@ class CorpusStorageManager:
         :param ctx_left: Left context in token distance to be included in the subgraph.
         :param ctx_right: Right context in token distance to be included in the subgraph.
         :param segmentation: The name of the segmentation which should be used to as base for the context. 
-	 * 					   Use `None` to define the context in the default token layer.
-        
+         * 					   Use `None` to define the context in the default token layer.
+
         """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
@@ -195,8 +195,11 @@ class CorpusStorageManager:
             CAPI.annis_vec_str_push(c_node_ids, nid.encode('utf-8'))
 
         err = ffi.new("AnnisErrorList **")
-        db = CAPI.annis_cs_subgraph(self.__cs, corpus_name.encode(
-            'utf-8'), c_node_ids, ctx_left, ctx_right, err)
+        db = CAPI.annis_cs_subgraph(self.__cs, corpus_name.encode('utf-8'),
+                                    c_node_ids, ctx_left, ctx_right,
+                                    ffi.NULL if segmentation == None else segmentation.encode(
+                                        'utf-8'),
+                                    err)
         consume_errors(err)
 
         G = map_graph(db)
@@ -232,7 +235,7 @@ class CorpusStorageManager:
 
     def apply_update(self, corpus_name: str, update):
         """ Apply a sequence of updates (`update` parameter) to this graph for a corpus given by the `corpus_name` parameter.
-    
+
         It is ensured that the update process is atomic and that the changes are persisted to disk if the no exceptions are thrown.
 
         :param corpus_name: The name of the corpus to apply the update on.
