@@ -12,8 +12,8 @@ import os
 import os.path
 
 # Package meta-data
-VERSION = '0.23.1'
-CORE_VERSION = '0.22.0'  # graphANNIS core library version
+VERSION = '0.24.0'
+CORE_VERSION = '0.23.1'  # graphANNIS core library version
 
 CORE_FILES = {
     'linux-x86-64/libgraphannis.so': 'https://github.com/korpling/graphANNIS/releases/download/v' +
@@ -98,12 +98,12 @@ setup(name='graphannis',
       setup_requires=["cffi>=1.0.0"],
       cffi_modules=["package/graphannis_build.py:ffibuilder"],
       install_requires=["cffi>=1.0.0", "networkx"],
-      classifiers=(
+      classifiers=[
           "Programming Language :: Python :: 3.6",
           "License :: OSI Approved :: Apache Software License",
           "Operating System :: POSIX :: Linux",
           "Operating System :: MacOS :: MacOS X",
           "Operating System :: Microsoft :: Windows"
-      ),
+      ],
       cmdclass={"clean": clean, "update_changelog": update_changelog}
       )
