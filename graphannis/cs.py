@@ -174,7 +174,7 @@ class CorpusStorageManager:
 
         return result
 
-    def subgraph(self, corpus_name: str, node_ids, ctx_left=0, ctx_right=0) -> nx.MultiDiGraph:
+    def subgraph(self, corpus_name: str, node_ids, ctx_left=0, ctx_right=0, segmentation = None) -> nx.MultiDiGraph:
         """ Return the copy of a subgraph which includes the given list of node annotation identifiers, 
         the nodes that cover the same token as the given nodes and all nodes that cover the token 
         which are part of the defined context. 
@@ -183,6 +183,8 @@ class CorpusStorageManager:
         :param node_ids: A list of node annotation identifiers describing the subgraph.
         :param ctx_left: Left context in token distance to be included in the subgraph.
         :param ctx_right: Right context in token distance to be included in the subgraph.
+        :param segmentation: The name of the segmentation which should be used to as base for the context. 
+	 * 					   Use `None` to define the context in the default token layer.
         
         """
         if self.__cs is None or self.__cs == ffi.NULL:
