@@ -3,6 +3,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.25.0] - 2019-11-15 
+
+### Changed
+
+- Updated graphANNIS version to 0.24.0
+
 ## [0.24.0] - 2019-10-18 
 
 ### Added
