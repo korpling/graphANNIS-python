@@ -211,13 +211,13 @@ AnnisGraph *annis_cs_corpus_graph(const AnnisCorpusStorage *ptr,
                                   AnnisErrorList **err);
 
 uint64_t annis_cs_count(const AnnisCorpusStorage *ptr,
-                        const char *corpus,
+                        const AnnisVec_CString *corpus_names,
                         const char *query,
                         AnnisQueryLanguage query_language,
                         AnnisErrorList **err);
 
 AnnisCountExtra annis_cs_count_extra(const AnnisCorpusStorage *ptr,
-                                     const char *corpus,
+                                     const AnnisVec_CString *corpus_names,
                                      const char *query,
                                      AnnisQueryLanguage query_language,
                                      AnnisErrorList **err);
@@ -228,18 +228,18 @@ AnnisCountExtra annis_cs_count_extra(const AnnisCorpusStorage *ptr,
 bool annis_cs_delete(AnnisCorpusStorage *ptr, const char *corpus, AnnisErrorList **err);
 
 AnnisVec_CString *annis_cs_find(const AnnisCorpusStorage *ptr,
-                                const char *corpus_name,
+                                const AnnisVec_CString *corpus_names,
                                 const char *query,
                                 AnnisQueryLanguage query_language,
                                 size_t offset,
-                                size_t limit,
+                                const size_t *limit,
                                 AnnisResultOrder order,
                                 AnnisErrorList **err);
 
 void annis_cs_free(AnnisCorpusStorage *ptr);
 
 AnnisFrequencyTable_CString *annis_cs_frequency(const AnnisCorpusStorage *ptr,
-                                                const char *corpus_name,
+                                                const AnnisVec_CString *corpus_names,
                                                 const char *query,
                                                 AnnisQueryLanguage query_language,
                                                 const char *frequency_query_definition,
@@ -310,7 +310,7 @@ AnnisGraph *annis_cs_subgraph_for_query_with_ctype(const AnnisCorpusStorage *ptr
 void annis_cs_unload(AnnisCorpusStorage *ptr, const char *corpus, AnnisErrorList **_err);
 
 bool annis_cs_validate_query(const AnnisCorpusStorage *ptr,
-                             const char *corpus,
+                             const AnnisVec_CString *corpus_names,
                              const char *query,
                              AnnisQueryLanguage query_language,
                              AnnisErrorList **err);

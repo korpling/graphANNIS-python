@@ -25,15 +25,23 @@ class TestCorpusStorageManager(unittest.TestCase):
 
     def test_find(self):
         with CorpusStorageManager(self.dataDir) as cs:
-            find_result = cs.find('GUM', 'pos="NN" . pos="NN"')
+            count_result = cs.count('GUM', 'pos="NN" . pos="NN"')
+
+            find_result = cs.find('GUM', 'pos="NN" . pos="NN"', limit=6)
             assert(isinstance(find_result, list))
 
-            assert(len(find_result) > 0)
+            assert(len(find_result) == 6)
             assert(isinstance(find_result[0], list))
 
             G = cs.subgraph('GUM', node_name_from_match(find_result[0]), 5, 5)
             assert(len(G.nodes) > 0)
             assert(len(G.edges) > 0)
+
+            # If limit is set to none, find all results
+            find_result = cs.find('GUM', 'pos="NN" . pos="NN"', limit=None)
+            assert(isinstance(find_result, list))
+
+            assert(len(find_result) == count_result)
 
     def test_subcorpus_graph(self):
         with CorpusStorageManager(self.dataDir) as cs:
