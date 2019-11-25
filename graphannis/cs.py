@@ -66,10 +66,10 @@ class CorpusStorageManager:
             copy.append(corpus_name.decode('utf-8'))
         return copy
 
-    def count(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL) -> int:
+    def count(self, corpus_name, query: str, query_language=QueryLanguage.AQL) -> int:
         """ Count the number of results for a query. 
 
-        :param corpus_name: The name of the corpus to execute the query on.
+        :param corpus_name: The name of the corpus to execute the query on. This can be a string or a list of strings.
         :param query:  The query as string.
         :param query_language: The query language of the query (e.g. AQL).
         :return: The count of matches as number.
@@ -79,17 +79,28 @@ class CorpusStorageManager:
 
         result = int(0)
 
+
+        c_corpus_list = CAPI.annis_vec_str_new()
+        if isinstance(corpus_name, str):
+            CAPI.annis_vec_str_push(c_corpus_list, corpus_name.encode('utf-8'))
+        else:
+            for c in corpus_name:
+                CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
+
         err = ffi.new("AnnisErrorList **")
-        result = result + CAPI.annis_cs_count(self.__cs, corpus_name.encode('utf-8'),
+        result = result + CAPI.annis_cs_count(self.__cs, c_corpus_list,
                                               query.encode('utf-8'), int(query_language), err)
+
+        CAPI.annis_free(c_corpus_list)
+
         consume_errors(err)
 
         return result
 
-    def count_extra(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL) -> CountExtra:
+    def count_extra(self, corpus_name, query: str, query_language=QueryLanguage.AQL) -> CountExtra:
         """ Count the number of results for a `query` and return both the total number of matches and also the number of documents in the result set.
 
-        :param corpus_name: The name of the corpus to execute the query on.
+        :param corpus_name: The name of the corpus to execute the query on. This can be a string or a list of strings
         :param query:  The query as string.
         :param query_language: The query language of the query (e.g. AQL).
         :return: The count of matches and documents.
@@ -97,18 +108,27 @@ class CorpusStorageManager:
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
 
+        c_corpus_list = CAPI.annis_vec_str_new()
+        if isinstance(corpus_name, str):
+            CAPI.annis_vec_str_push(c_corpus_list, corpus_name.encode('utf-8'))
+        else:
+            for c in corpus_name:
+                CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
+
         err = ffi.new("AnnisErrorList **")
         result = CAPI.annis_cs_count_extra(self.__cs, corpus_name.encode('utf-8'),
                                            query.encode('utf-8'), int(query_language), err)
+
+        CAPI.annis_free(c_corpus_list)
 
         consume_errors(err)
 
         return CountExtra(match_count=result.match_count, document_count=result.document_count)
 
-    def find(self, corpus_name: str, query: str, query_language=QueryLanguage.AQL, offset=0, limit=10, order: ResultOrder = ResultOrder.Normal):
+    def find(self, corpus_name, query: str, query_language=QueryLanguage.AQL, offset=0, limit=10, order: ResultOrder = ResultOrder.Normal):
         """Find all results for a `query` and return the match ID for each result.
 
-        :param corpus_name: The name of the corpus to execute the query on.
+        :param corpus_name: The name of the corpus to execute the query on. This can be a string or a list of strings.
         :param query: The query as string.
         :param query_language: The query language of the query (e.g. AQL).
         :param offset: Skip the `n` first results, where `n` is the offset.
@@ -122,10 +142,22 @@ class CorpusStorageManager:
 
         result = []
         err = ffi.new("AnnisErrorList **")
-        vec = CAPI.annis_cs_find(self.__cs, corpus_name.encode('utf-8'),
+
+        c_corpus_list = CAPI.annis_vec_str_new()
+        if isinstance(corpus_name, str):
+            CAPI.annis_vec_str_push(c_corpus_list, corpus_name.encode('utf-8'))
+        else:
+            for c in corpus_name:
+                CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
+
+
+        vec = CAPI.annis_cs_find(self.__cs, c_corpus_list,
                                  query.encode(
             'utf-8'), int(query_language),
             offset, limit, int(order), err)
+
+        CAPI.annis_free(c_corpus_list)
+
         consume_errors(err)
 
         vec_size = CAPI.annis_vec_str_size(vec)
@@ -138,7 +170,7 @@ class CorpusStorageManager:
     def frequency(self, corpus_name, query, definition, query_language=QueryLanguage.AQL):
         """ Execute a frequency query. 
 
-        :param corpus_name: The name of the corpus (not a list)
+        :param corpus_name: The name of the corpus. This can be a string or a list of strings.
         :param query:       Query in the specified query language (per default AQL)
         :param definition:  A comma seperated list of single frequency definition items as string.
                             Each frequency definition must consist of two parts: the name of referenced node and the (possible qualified) annotation name or "tok" separated by ":".
@@ -156,8 +188,19 @@ class CorpusStorageManager:
             return None
 
         err = ffi.new("AnnisErrorList **")
-        ft = CAPI.annis_cs_frequency(self.__cs, corpus_name.encode('utf-8'),
+
+        c_corpus_list = CAPI.annis_vec_str_new()
+        if isinstance(corpus_name, str):
+            CAPI.annis_vec_str_push(c_corpus_list, corpus_name.encode('utf-8'))
+        else:
+            for c in corpus_name:
+                CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
+
+
+        ft = CAPI.annis_cs_frequency(self.__cs, c_corpus_list,
                                      query.encode('utf-8'), int(query_language), definition.encode('utf-8'), err)
+
+        CAPI.annis_free(c_corpus_list)
         consume_errors(err)
 
         # return a list containing a tuple (the different values) and their count
