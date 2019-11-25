@@ -116,7 +116,7 @@ class CorpusStorageManager:
                 CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
 
         err = ffi.new("AnnisErrorList **")
-        result = CAPI.annis_cs_count_extra(self.__cs, corpus_name.encode('utf-8'),
+        result = CAPI.annis_cs_count_extra(self.__cs, c_corpus_list,
                                            query.encode('utf-8'), int(query_language), err)
 
         CAPI.annis_free(c_corpus_list)
@@ -151,10 +151,15 @@ class CorpusStorageManager:
                 CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
 
 
+        limit_ptr = ffi.NULL
+        if limit is not None:
+            limit_ptr = ffi.new("size_t *")
+            limit_ptr[0] = limit
+
         vec = CAPI.annis_cs_find(self.__cs, c_corpus_list,
                                  query.encode(
             'utf-8'), int(query_language),
-            offset, limit, int(order), err)
+            offset, limit_ptr, int(order), err)
 
         CAPI.annis_free(c_corpus_list)
 
