@@ -67,7 +67,7 @@ class CorpusStorageManager:
         return copy
 
     def count(self, corpus_name, query: str, query_language=QueryLanguage.AQL) -> int:
-        """ Count the number of results for a query. 
+        """ Count the number of results for a query.
 
         :param corpus_name: The name of the corpus to execute the query on. This can be a string or a list of strings.
         :param query:  The query as string.
@@ -78,7 +78,6 @@ class CorpusStorageManager:
             return None
 
         result = int(0)
-
 
         c_corpus_list = CAPI.annis_vec_str_new()
         if isinstance(corpus_name, str):
@@ -150,7 +149,6 @@ class CorpusStorageManager:
             for c in corpus_name:
                 CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
 
-
         limit_ptr = ffi.NULL
         if limit is not None:
             limit_ptr = ffi.new("size_t *")
@@ -158,8 +156,8 @@ class CorpusStorageManager:
 
         vec = CAPI.annis_cs_find(self.__cs, c_corpus_list,
                                  query.encode(
-            'utf-8'), int(query_language),
-            offset, limit_ptr, int(order), err)
+                                     'utf-8'), int(query_language),
+                                 offset, limit_ptr, int(order), err)
 
         CAPI.annis_free(c_corpus_list)
 
@@ -173,7 +171,7 @@ class CorpusStorageManager:
         return result
 
     def frequency(self, corpus_name, query, definition, query_language=QueryLanguage.AQL):
-        """ Execute a frequency query. 
+        """ Execute a frequency query.
 
         :param corpus_name: The name of the corpus. This can be a string or a list of strings.
         :param query:       Query in the specified query language (per default AQL)
@@ -183,10 +181,11 @@ class CorpusStorageManager:
 
                                 1:tok,3:pos,4:tiger::pos
 
-                            would extract the token value for the node #1, the pos annotation for node #3 and the 
+                            #1, the pos annotation for node #3 and the
+                            would extract the token value for the node
                             pos annotation in the tiger namespace for node #4.
         :param query_language: Optional query language (AQL per default)
-        :return: A frequency table which is a list of named tuples. The named tuples have the field **values** which is a list 
+        :return: A frequency table which is a list of named tuples. The named tuples have the field **values** which is a list
                  with the actual values for this entry and **count** with the number of occurences for these value combination.
         """
         if self.__cs is None or self.__cs == ffi.NULL:
@@ -200,7 +199,6 @@ class CorpusStorageManager:
         else:
             for c in corpus_name:
                 CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
-
 
         ft = CAPI.annis_cs_frequency(self.__cs, c_corpus_list,
                                      query.encode('utf-8'), int(query_language), definition.encode('utf-8'), err)
@@ -223,15 +221,15 @@ class CorpusStorageManager:
         return result
 
     def subgraph(self, corpus_name: str, node_ids, ctx_left=0, ctx_right=0, segmentation=None) -> nx.MultiDiGraph:
-        """ Return the copy of a subgraph which includes the given list of node annotation identifiers, 
-        the nodes that cover the same token as the given nodes and all nodes that cover the token 
-        which are part of the defined context. 
+        """ Return the copy of a subgraph which includes the given list of node annotation identifiers,
+        the nodes that cover the same token as the given nodes and all nodes that cover the token
+        which are part of the defined context.
 
         :param corpus_name: The name of the corpus for which the subgraph should be generated from.
         :param node_ids: A list of node annotation identifiers describing the subgraph.
         :param ctx_left: Left context in token distance to be included in the subgraph.
         :param ctx_right: Right context in token distance to be included in the subgraph.
-        :param segmentation: The name of the segmentation which should be used to as base for the context. 
+        :param segmentation: The name of the segmentation which should be used to as base for the context.
          * 					   Use `None` to define the context in the default token layer.
 
         """
@@ -258,7 +256,7 @@ class CorpusStorageManager:
         return G
 
     def subcorpus_graph(self, corpus_name: str, document_ids) -> nx.MultiDiGraph:
-        """ Return the copy of a subgraph which includes all nodes that belong to any of the given list of sub-corpus/document identifiers. 
+        """ Return the copy of a subgraph which includes all nodes that belong to any of the given list of sub-corpus/document identifiers.
         :param corpus_name:  The name of the corpus for which the subgraph should be generated from.
         :param document_ids: A list of sub-corpus/document identifiers describing the subgraph.
         """
@@ -287,10 +285,10 @@ class CorpusStorageManager:
         It is ensured that the update process is atomic and that the changes are persisted to disk if the no exceptions are thrown.
 
         :param corpus_name: The name of the corpus to apply the update on.
-        :param update: List with elements of the type :py:class:`graphannis.graph.GraphUpdate`. 
+        :param update: List with elements of the type :py:class:`graphannis.graph.GraphUpdate`.
 
         >>> from graphannis.cs import CorpusStorageManager
-        >>> from graphannis.graph import GraphUpdate 
+        >>> from graphannis.graph import GraphUpdate
         >>> with CorpusStorageManager() as cs:
         ...     with GraphUpdate() as g:
         ...         g.add_node('n1')
@@ -306,7 +304,7 @@ class CorpusStorageManager:
         """ Delete a corpus from the database
 
         >>> from graphannis.cs import CorpusStorageManager
-        >>> from graphannis.graph import GraphUpdate 
+        >>> from graphannis.graph import GraphUpdate
         >>> with CorpusStorageManager() as cs:
         ...     # create a corpus named "test"
         ...     with GraphUpdate() as g:
@@ -325,16 +323,20 @@ class CorpusStorageManager:
         consume_errors(err)
         return result
 
-    def import_from_fs(self, path, fmt: ImportFormat = ImportFormat.RelANNIS, corpus_name: str = None):
+    def import_from_fs(self, path, fmt: ImportFormat = ImportFormat.RelANNIS, corpus_name: str = None, disk_based: bool = False):
         """ Import corpus from the file system into the database
 
         >>> from graphannis.cs import CorpusStorageManager
-        >>> from graphannis.graph import GraphUpdate 
+        >>> from graphannis.graph import GraphUpdate
         >>> with CorpusStorageManager() as cs:
         ...     # import relANNIS corpus with automatic name
-        ...     cs.import_from_fs("relannis/GUM")
+        ...     corpus_name = cs.import_from_fs("relannis/GUM")
+        ...     print(corpus_name)
         ...     # import with a different name
-        ...     cs.import_from_fs("relannis/GUM", ImportFormat.RelANNIS, "GUM_version_unknown")
+        ...     corpus_name = cs.import_from_fs("relannis/GUM", ImportFormat.RelANNIS, "GUM_version_unknown")
+        ...     print(corpus_name)
+        GUM
+        GUM_version_unknown
         """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
@@ -344,7 +346,8 @@ class CorpusStorageManager:
             corpus_name = ffi.NULL
         else:
             corpus_name = corpus_name.encode('utf-8')
-        CAPI.annis_cs_import_from_fs(self.__cs,
-                                     path.encode('utf-8'), fmt, corpus_name, err)
+        imported_corpus_name = CAPI.annis_cs_import_from_fs(self.__cs,
+                                                            path.encode('utf-8'), fmt, corpus_name, disk_based, err)
 
         consume_errors(err)
+        return ffi.string(imported_corpus_name).decode('utf-8')
