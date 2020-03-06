@@ -325,7 +325,7 @@ class CorpusStorageManager:
         consume_errors(err)
         return result
 
-    def import_from_fs(self, path, fmt: ImportFormat = ImportFormat.RelANNIS, corpus_name: str = None):
+    def import_from_fs(self, path, fmt: ImportFormat = ImportFormat.RelANNIS, corpus_name: str = None, disk_based: bool = False):
         """ Import corpus from the file system into the database
 
         >>> from graphannis.cs import CorpusStorageManager
@@ -344,7 +344,8 @@ class CorpusStorageManager:
             corpus_name = ffi.NULL
         else:
             corpus_name = corpus_name.encode('utf-8')
-        CAPI.annis_cs_import_from_fs(self.__cs,
-                                     path.encode('utf-8'), fmt, corpus_name, err)
+        imported_corpus_name = CAPI.annis_cs_import_from_fs(self.__cs,
+                                     path.encode('utf-8'), fmt, corpus_name, disk_based, err)
 
         consume_errors(err)
+        return imported_corpus_name
