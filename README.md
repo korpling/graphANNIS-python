@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/korpling/graphANNIS-python.svg?branch=develop)](https://travis-ci.org/korpling/graphANNIS-python)
+![Automated tests](https://github.com/korpling/graphANNIS-python/workflows/Automated%20tests/badge.svg)
 
 # graphANNIS Python Bindings
 
