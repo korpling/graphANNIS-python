@@ -2,6 +2,7 @@ on: push
 name: Automated tests
 jobs:
   test:
+    name: Execute all automated tests
     runs-on: ubuntu-16.04
     steps:
     - name: Checkout
