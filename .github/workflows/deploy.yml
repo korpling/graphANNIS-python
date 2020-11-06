@@ -1,5 +1,8 @@
 name: Deploy to PyPi package repository
-on: push
+on: 
+  push:
+    branches:
+      - "master"
 
 jobs:
   deploy:
