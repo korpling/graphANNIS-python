@@ -8,12 +8,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Install dependencies
-      run: pip3 install cffi networkx requests
+      run: pip3 install cffi networkx
     - name: Run setup.py
-      run: python setup.py build
+      run: python3 setup.py build
     - name: Download GUM test corpus
       run: "./package/download-gum-corpus.sh"
     - name: Run documentation tests
       run: "./doctest_runner.py"
     - name: Run unit tests
-      run: python -m unittest
+      run: python3 -m unittest
