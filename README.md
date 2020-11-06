@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/korpling/graphANNIS-python.svg?branch=develop)](https://travis-ci.org/korpling/graphANNIS-python)
+![Automated tests](https://github.com/korpling/graphANNIS-python/workflows/Automated%20tests/badge.svg)
 
 # graphANNIS Python Bindings
 
-GraphANNIS is a library for corpus linguistic queries and these are the Python bindings to **graphANNIS core library version 0.26.0**.
+GraphANNIS is a library for corpus linguistic queries and these are the Python bindings to **graphANNIS core library version 0.30.0**.
 
 
 ## How to use in your own scripts

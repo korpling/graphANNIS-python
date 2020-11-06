@@ -1,0 +1,36 @@
+name: Automated tests
+on: push
+
+jobs:
+  test:
+    name: Execute all automated tests
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.6'
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Chache pip dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/setup.py') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Chache GUM corpus
+      uses: actions/cache@v2
+      with:
+        path: gum.zip
+        key: ${{ runner.os }}-gum-${{ hashFiles('package/download-gum-corpus.sh') }}
+    - name: Install dependencies
+      run: pip install cffi networkx setuptools
+    - name: Run setup.py
+      run: python setup.py build
+    - name: Download GUM test corpus
+      run: "./package/download-gum-corpus.sh"
+    - name: Run documentation tests
+      run: "./doctest_runner.py"
+    - name: Run unit tests
+      run: python -m unittest

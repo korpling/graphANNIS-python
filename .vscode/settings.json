@@ -2,7 +2,7 @@
     "python.testing.unittestArgs": [
         "-v",
         "-s",
-        ".",
+        "./graphannis",
         "-p",
         "test_*.py"
     ],

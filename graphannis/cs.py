@@ -28,6 +28,7 @@ class QueryLanguage(IntEnum):
 class ImportFormat(IntEnum):
     """ Defines the import format """
     RelANNIS = 0
+    GraphML = 1
 
 
 FrequencyTableEntry = namedtuple("FrequencyTableEntry", "values count")
