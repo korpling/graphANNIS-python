@@ -7,7 +7,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Install dependencies
-      run: pip install cffi networkx
+      run: pip install cffi networkx requests
     - name: Run setup.py
       run: python setup.py build
     - name: Download GUM test corpus
