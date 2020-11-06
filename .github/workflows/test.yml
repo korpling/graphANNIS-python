@@ -1,0 +1,18 @@
+on: push
+name: Automated tests
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Install dependencies
+      run: pip install cffi networkx
+    - name: Run setup.py
+      run: python setup.py build
+    - name: Download GUM test corpus
+      run: "./package/download-gum-corpus.sh"
+    - name: Run documentation tests
+      run: "./doctest_runner.py"
+    - name: Run unit tests
+      run: python -m unittest
