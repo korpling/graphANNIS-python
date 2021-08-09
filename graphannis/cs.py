@@ -347,11 +347,11 @@ class CorpusStorageManager:
         ...     # import relANNIS corpus with automatic name
         ...     corpus_name = cs.import_from_fs("relannis/GUM")
         ...     print(corpus_name)
-        ...     # import with a different name
-        ...     corpus_name = cs.import_from_fs("relannis/GUM", ImportFormat.RelANNIS, "GUM_version_unknown")
+        ...     # import a GraphML corpus with a different name
+        ...     corpus_name = cs.import_from_fs("examples/tutorial.graphml", ImportFormat.GraphML, "example")
         ...     print(corpus_name)
         GUM
-        GUM_version_unknown
+        example
         """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
@@ -377,12 +377,12 @@ class CorpusStorageManager:
         >>> from graphannis.graph import GraphUpdate
         >>> with CorpusStorageManager() as cs:
         ...     # import the same corpus under different names
-        ...     g1 = cs.import_from_fs("relannis/GUM", corpus_name="GUM1")
-        ...     g2 = cs.import_from_fs("relannis/GUM", corpus_name="GUM2")
+        ...     c1 = cs.import_from_fs("examples/tutorial.graphml", ImportFormat.GraphML, corpus_name="example1")
+        ...     c2 = cs.import_from_fs("examples/tutorial.graphml", ImportFormat.GraphML, corpus_name="example2")
         ...
         ...     # export them to different formats
-        ...     cs.export_to_fs(["GUM1", "GUM2"], "all.zip", ExportFormat.GraphMLZip)
-        ...     cs.export_to_fs("GUM2", "gum2.graphml", ExportFormat.GraphML)
+        ...     cs.export_to_fs(["example1", "example2"], "all.zip", ExportFormat.GraphMLZip)
+        ...     cs.export_to_fs("example2", "example2.graphml", ExportFormat.GraphML)
         """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
