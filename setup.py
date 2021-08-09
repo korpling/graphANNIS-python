@@ -12,8 +12,8 @@ import os
 import os.path
 
 # Package meta-data
-VERSION = '0.30.0'
-CORE_VERSION = '0.30.0'  # graphANNIS core library version
+VERSION = '0.32.0'
+CORE_VERSION = '0.32.0'  # graphANNIS core library version
 
 CORE_FILES = {
     'linux-x86-64/libgraphannis.so': 'https://github.com/korpling/graphANNIS/releases/download/v' +

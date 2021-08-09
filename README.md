@@ -2,7 +2,7 @@
 
 # graphANNIS Python Bindings
 
-GraphANNIS is a library for corpus linguistic queries and these are the Python bindings to **graphANNIS core library version 0.30.0**.
+GraphANNIS is a library for corpus linguistic queries and these are the Python bindings to **graphANNIS core library version 0.32.0**.
 
 
 ## How to use in your own scripts
@@ -37,7 +37,7 @@ To compile graphANNIS on your own (e.g. for using a non-released version)
 
 - Clone the graphANNIS library  from https://github.com/korpling/graphANNIS/
 - Follow the [graphANNIS compile instructions](https://github.com/korpling/graphANNIS#how-to-compile)
-- Copy the resulting shared library file `<graphANNIS-repo>/target/release/libgraphannis.so` (`libgraphannis.dylib` under MacOS X and `graphannis.dll` under Windows) into the `graphannis/<platform>` folder.
+- Copy the resulting shared library file `<graphANNIS-repo>/target/release/libgraphannis_capi.so` (`libgraphannis_capi.dylib` under MacOS X and `graphannis_capi.dll` under Windows) into the `graphannis/<platform>` folder (but without the `_capi` suffix).
 
 ## Release process
 

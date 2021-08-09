@@ -3,6 +3,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.32.0] - 2021-08-09 
+
+### Added
+
+- Add export API
+
 ## [0.30.0] - 2020-11-06 
 
 ### Changed

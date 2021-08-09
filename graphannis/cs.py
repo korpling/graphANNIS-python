@@ -26,9 +26,23 @@ class QueryLanguage(IntEnum):
 
 
 class ImportFormat(IntEnum):
-    """ Defines the import format """
+    """An enum of all supported input formats of graphANNIS."""
     RelANNIS = 0
+    """Legacy relANNIS import file format: http://korpling.github.io/ANNIS/4.0/developer-guide/annisimportformat.html"""
     GraphML = 1
+    """GraphML (http://graphml.graphdrawing.org/) based export-format, suitable to be imported from other graph databases.
+    This format follows the extensions/conventions of the Neo4j GraphML module (https://neo4j.com/docs/labs/apoc/current/import/graphml/)."""
+
+
+class ExportFormat(IntEnum):
+    """An enum of all supported output formats of graphANNIS."""
+    GraphML = 0
+    """ GraphML (http://graphml.graphdrawing.org/) based export-format, suitable to be imported into other graph databases.
+    This format follows the extensions/conventions of the Neo4j GraphML module (https://neo4j.com/docs/labs/apoc/current/import/graphml/)."""
+    GraphMLZip = 1
+    """Like **GraphML**, but compressed as ZIP file. Linked files are also copied into the ZIP file."""
+    GraphMLDirectory = 2
+    """Like **GraphML**, but using a directory with multiple GraphML files, each for one corpus."""
 
 
 FrequencyTableEntry = namedtuple("FrequencyTableEntry", "values count")
@@ -324,7 +338,7 @@ class CorpusStorageManager:
         consume_errors(err)
         return result
 
-    def import_from_fs(self, path, fmt: ImportFormat = ImportFormat.RelANNIS, corpus_name: str = None, disk_based: bool = False):
+    def import_from_fs(self, path, fmt: ImportFormat = ImportFormat.RelANNIS, corpus_name: str = None, disk_based: bool = False, overwrite_existing: bool = False):
         """ Import corpus from the file system into the database
 
         >>> from graphannis.cs import CorpusStorageManager
@@ -333,11 +347,11 @@ class CorpusStorageManager:
         ...     # import relANNIS corpus with automatic name
         ...     corpus_name = cs.import_from_fs("relannis/GUM")
         ...     print(corpus_name)
-        ...     # import with a different name
-        ...     corpus_name = cs.import_from_fs("relannis/GUM", ImportFormat.RelANNIS, "GUM_version_unknown")
+        ...     # import a GraphML corpus with a different name
+        ...     corpus_name = cs.import_from_fs("examples/tutorial.graphml", ImportFormat.GraphML, "example")
         ...     print(corpus_name)
         GUM
-        GUM_version_unknown
+        example
         """
         if self.__cs is None or self.__cs == ffi.NULL:
             return None
@@ -348,7 +362,40 @@ class CorpusStorageManager:
         else:
             corpus_name = corpus_name.encode('utf-8')
         imported_corpus_name = CAPI.annis_cs_import_from_fs(self.__cs,
-                                                            path.encode('utf-8'), fmt, corpus_name, disk_based, err)
+                                                            path.encode('utf-8'), fmt, corpus_name, disk_based, overwrite_existing, err)
 
         consume_errors(err)
         return ffi.string(imported_corpus_name).decode('utf-8')
+
+    def export_to_fs(self, corpus_name, path, fmt: ExportFormat = ExportFormat.GraphMLZip):
+        """ Export a corpus to an external location on the file system using the given format.
+            :param corpus_name: The name of the corpus to export. This can be a string or a list of strings.
+            :param path: The location on the file system where the corpus data should be written to.
+            :param fmt: The format in which this corpus data will be stored stored.
+
+        >>> from graphannis.cs import CorpusStorageManager
+        >>> from graphannis.graph import GraphUpdate
+        >>> with CorpusStorageManager() as cs:
+        ...     # import the same corpus under different names
+        ...     c1 = cs.import_from_fs("examples/tutorial.graphml", ImportFormat.GraphML, corpus_name="example1")
+        ...     c2 = cs.import_from_fs("examples/tutorial.graphml", ImportFormat.GraphML, corpus_name="example2")
+        ...
+        ...     # export them to different formats
+        ...     cs.export_to_fs(["example1", "example2"], "all.zip", ExportFormat.GraphMLZip)
+        ...     cs.export_to_fs("example2", "example2.graphml", ExportFormat.GraphML)
+        """
+        if self.__cs is None or self.__cs == ffi.NULL:
+            return None
+
+        err = ffi.new("AnnisErrorList **")
+        c_corpus_list = CAPI.annis_vec_str_new()
+        if isinstance(corpus_name, str):
+            CAPI.annis_vec_str_push(c_corpus_list, corpus_name.encode('utf-8'))
+        else:
+            for c in corpus_name:
+                CAPI.annis_vec_str_push(c_corpus_list, c.encode('utf-8'))
+
+        CAPI.annis_cs_export_to_fs(self.__cs, c_corpus_list,
+                                   path.encode('utf-8'), fmt, err)
+
+        consume_errors(err)

@@ -80,19 +80,19 @@ def _map_edge(G, db, edge_ptr, component_ptr):
 
     component_type_enum = CAPI.annis_component_type(component_ptr)
     component_type = None
-    if component_type_enum == CAPI.Coverage:
+    if component_type_enum == CAPI.AnnisAnnotationComponentType_Coverage:
         component_type = 'Coverage'
-    elif component_type_enum == CAPI.Dominance:
+    elif component_type_enum == CAPI.AnnisAnnotationComponentType_Dominance:
         component_type = 'Dominance'
-    elif component_type_enum == CAPI.Pointing:
+    elif component_type_enum == CAPI.AnnisAnnotationComponentType_Pointing:
         component_type = 'Pointing'
-    elif component_type_enum == CAPI.Ordering:
+    elif component_type_enum == CAPI.AnnisAnnotationComponentType_Ordering:
         component_type = 'Ordering'
-    elif component_type_enum == CAPI.LeftToken:
+    elif component_type_enum == CAPI.AnnisAnnotationComponentType_LeftToken:
         component_type = 'LeftToken'
-    elif component_type_enum == CAPI.RightToken:
+    elif component_type_enum == CAPI.AnnisAnnotationComponentType_RightToken:
         component_type = 'RightToken'
-    elif component_type_enum == CAPI.PartOf:
+    elif component_type_enum == CAPI.AnnisAnnotationComponentType_PartOf:
         component_type = 'PartOf'
 
     if component_type != None:
