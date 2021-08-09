@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml>
+    <key id="k0" for="graph" attr.name="configuration" attr.type="string"/>
+    <key id="k1" for="node" attr.name="annis::node_type" attr.type="string"/>
+    <key id="k2" for="node" attr.name="annis::tok" attr.type="string"/>
+    <graph edgedefault="directed" parse.order="nodesfirst" parse.nodeids="free" parse.edgeids="canonical">
+        <data key="k0">
+            <![CDATA[[context]
+default = 5
+sizes = [
+    1,
+    2,
+    5,
+    10,
+]
+
+[view]
+page_size = 10
+]]>
+        </data>
+        <node id="tutorial">
+            <data key="k1">corpus</data>
+        </node>
+        <node id="tutorial/doc1">
+            <data key="k1">corpus</data>
+        </node>
+        <node id="tutorial/doc1#t1">
+            <data key="k1">node</data>
+            <data key="k2">That</data>
+        </node>
+        <node id="tutorial/doc1#t2">
+            <data key="k1">node</data>
+            <data key="k2">is</data>
+        </node>
+        <node id="tutorial/doc1#t3">
+            <data key="k1">node</data>
+            <data key="k2">a</data>
+        </node>
+        <node id="tutorial/doc1#t4">
+            <data key="k1">node</data>
+            <data key="k2">Category</data>
+        </node>
+        <node id="tutorial/doc1#t5">
+            <data key="k1">node</data>
+            <data key="k2">3</data>
+        </node>
+        <node id="tutorial/doc1#t6">
+            <data key="k1">node</data>
+            <data key="k2">storm</data>
+        </node>
+        <node id="tutorial/doc1#t7">
+            <data key="k1">node</data>
+            <data key="k2">.</data>
+        </node>
+        <edge id="e0" source="tutorial/doc1#t6" target="tutorial/doc1#t7" label="Ordering/annis/">
+        </edge>
+        <edge id="e1" source="tutorial/doc1#t5" target="tutorial/doc1#t6" label="Ordering/annis/">
+        </edge>
+        <edge id="e2" source="tutorial/doc1#t4" target="tutorial/doc1#t5" label="Ordering/annis/">
+        </edge>
+        <edge id="e3" source="tutorial/doc1#t3" target="tutorial/doc1#t4" label="Ordering/annis/">
+        </edge>
+        <edge id="e4" source="tutorial/doc1#t2" target="tutorial/doc1#t3" label="Ordering/annis/">
+        </edge>
+        <edge id="e5" source="tutorial/doc1#t1" target="tutorial/doc1#t2" label="Ordering/annis/">
+        </edge>
+        <edge id="e6" source="tutorial/doc1#t1" target="tutorial/doc1" label="PartOf/annis/">
+        </edge>
+        <edge id="e7" source="tutorial/doc1#t5" target="tutorial/doc1" label="PartOf/annis/">
+        </edge>
+        <edge id="e8" source="tutorial/doc1#t2" target="tutorial/doc1" label="PartOf/annis/">
+        </edge>
+        <edge id="e9" source="tutorial/doc1" target="tutorial" label="PartOf/annis/">
+        </edge>
+        <edge id="e10" source="tutorial/doc1#t6" target="tutorial/doc1" label="PartOf/annis/">
+        </edge>
+        <edge id="e11" source="tutorial/doc1#t3" target="tutorial/doc1" label="PartOf/annis/">
+        </edge>
+        <edge id="e12" source="tutorial/doc1#t7" target="tutorial/doc1" label="PartOf/annis/">
+        </edge>
+        <edge id="e13" source="tutorial/doc1#t4" target="tutorial/doc1" label="PartOf/annis/">
+        </edge>
+    </graph>
+</graphml>
