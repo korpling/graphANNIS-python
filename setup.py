@@ -12,7 +12,7 @@ import os
 import os.path
 
 # Package meta-data
-VERSION = '0.32.0'
+VERSION = '1.4.1'
 CORE_VERSION = '1.4.1'  # graphANNIS core library version
 
 CORE_FILES = {
