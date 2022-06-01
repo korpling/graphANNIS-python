@@ -7,7 +7,9 @@ from .errors import consume_errors
 
 def _get_node_labels(nID, db):
     result = dict()
-    annos = CAPI.annis_graph_annotations_for_node(db, nID)
+    err = ffi.new("AnnisErrorList **")
+    annos = CAPI.annis_graph_annotations_for_node(db, nID, err)
+    consume_errors(err)
 
     for i in range(CAPI.annis_vec_annotation_size(annos)):
         a = CAPI.annis_vec_annotation_get(annos, i)
@@ -35,7 +37,9 @@ def _get_edge_labels(db, edge_ptr, component_ptr):
 
     edge = {'source': edge_ptr.source, 'target': edge_ptr.target}
 
-    annos = CAPI.annis_graph_annotations_for_edge(db, edge, component_ptr)
+    err = ffi.new("AnnisErrorList **")
+    annos = CAPI.annis_graph_annotations_for_edge(db, edge, component_ptr, err)
+    consume_errors(annos)
 
     for i in range(CAPI.annis_vec_annotation_size(annos)):
         a = CAPI.annis_vec_annotation_get(annos, i)
@@ -109,14 +113,18 @@ def _map_graph(db) -> nx.MultiDiGraph:
     # TODO: should we also map the corpus graph?
     it_nodes = CAPI.annis_graph_nodes_by_type(db, b'node')
     if it_nodes != ffi.NULL:
-        ptr_nID = CAPI.annis_iter_nodeid_next(it_nodes)
+        err = ffi.new("AnnisErrorList **")
+        ptr_nID = CAPI.annis_iter_nodeid_next(it_nodes, err)
+        consume_errors(err)
         while ptr_nID != ffi.NULL:
 
             nID = ptr_nID[0]
             _map_node(G, db, nID)
 
             CAPI.annis_free(ptr_nID)
-            ptr_nID = CAPI.annis_iter_nodeid_next(it_nodes)
+            err = ffi.new("AnnisErrorList **")
+            ptr_nID = CAPI.annis_iter_nodeid_next(it_nodes, err)
+            consume_errors(err)
 
     CAPI.annis_free(it_nodes)
 
@@ -128,7 +136,9 @@ def _map_graph(db) -> nx.MultiDiGraph:
     for n in list(G):
         for c_idx in range(component_size):
             component_ptr = CAPI.annis_vec_component_get(components, c_idx)
-            outEdges = CAPI.annis_graph_outgoing_edges(db, n, component_ptr)
+            err = ffi.new("AnnisErrorList **")
+            outEdges = CAPI.annis_graph_outgoing_edges(db, n, component_ptr, err)
+            consume_errors(err)
             for edge_idx in range(CAPI.annis_vec_edge_size(outEdges)):
                 edge_ptr = CAPI.annis_vec_edge_get(outEdges, edge_idx)
 
