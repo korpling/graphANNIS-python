@@ -247,10 +247,6 @@ const char *annis_error_get_kind(const AnnisErrorList *ptr, size_t i);
  * - `db_dir` - The path on the filesystem where the corpus storage content is located. Must be an existing directory.
  * - `use_parallel_joins` - If `true` parallel joins are used by the system, using all available cores.
  * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
- *
- * # Safety
- *
- * This functions dereferences the `err` pointer and is therefore unsafe.
  */
 struct AnnisCorpusStorage *annis_cs_with_auto_cache_size(const char *db_dir,
                                                          bool use_parallel_joins,
@@ -263,10 +259,6 @@ struct AnnisCorpusStorage *annis_cs_with_auto_cache_size(const char *db_dir,
  * - `max_cache_size` - Fixed maximum size of the cache in bytes.
  * - `use_parallel_joins` - If `true` parallel joins are used by the system, using all available cores.
  * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
- *
- * # Safety
- *
- * This functions dereferences the `err` pointer and is therefore unsafe.
  */
 struct AnnisCorpusStorage *annis_cs_with_max_cache_size(const char *db_dir,
                                                         uintptr_t max_cache_size,
@@ -465,7 +457,8 @@ struct AnnisVec_CString *annis_cs_list(const struct AnnisCorpusStorage *ptr, Ann
 AnnisMatrix_CString *annis_cs_list_node_annotations(const struct AnnisCorpusStorage *ptr,
                                                     const char *corpus_name,
                                                     bool list_values,
-                                                    bool only_most_frequent_values);
+                                                    bool only_most_frequent_values,
+                                                    AnnisErrorList **err);
 
 /**
  * Returns a list of all edge annotations of a corpus given by `corpus_name` and the component.
@@ -484,7 +477,8 @@ AnnisMatrix_CString *annis_cs_list_edge_annotations(const struct AnnisCorpusStor
                                                     const char *component_name,
                                                     const char *component_layer,
                                                     bool list_values,
-                                                    bool only_most_frequent_values);
+                                                    bool only_most_frequent_values,
+                                                    AnnisErrorList **err);
 
 /**
  * Parses a `query` and checks if it is valid.
@@ -557,10 +551,12 @@ void annis_cs_export_to_fs(struct AnnisCorpusStorage *ptr,
  *
  * - `ptr` - The corpus storage object.
  * - `ctype` -Filter by the component type.
+ * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
  */
 struct AnnisVec_AnnotationComponent *annis_cs_list_components_by_type(struct AnnisCorpusStorage *ptr,
                                                                       const char *corpus_name,
-                                                                      enum AnnisAnnotationComponentType ctype);
+                                                                      enum AnnisAnnotationComponentType ctype,
+                                                                      AnnisErrorList **err);
 
 /**
  * Delete a corpus from this corpus storage.
@@ -573,8 +569,11 @@ bool annis_cs_delete(struct AnnisCorpusStorage *ptr, const char *corpus, AnnisEr
 
 /**
  * Unloads a corpus from the cache.
+ *
+ * - `corpus` The name of the corpus to unload.
+ * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
  */
-void annis_cs_unload(struct AnnisCorpusStorage *ptr, const char *corpus);
+void annis_cs_unload(struct AnnisCorpusStorage *ptr, const char *corpus, AnnisErrorList **err);
 
 /**
  * Apply a sequence of updates (`update` parameter) to this graph for a corpus given by the `corpus_name` parameter.
@@ -610,8 +609,10 @@ void annis_str_free(char *s);
 /**
  * Returns a pointer to the next node ID for the iterator given by the `ptr` argument
  * or `NULL` if iterator is empty.
+ *
+ * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
  */
-AnnisNodeID *annis_iter_nodeid_next(struct AnnisIterPtr_NodeID *ptr);
+AnnisNodeID *annis_iter_nodeid_next(struct AnnisIterPtr_NodeID *ptr, AnnisErrorList **err);
 
 /**
  * Returns the number of elements of the string vector.
@@ -777,9 +778,12 @@ struct AnnisIterPtr_NodeID *annis_graph_nodes_by_type(const AnnisAnnotationGraph
 
 /**
  * Return a vector of all annotations for the given `node` in the graph `g`.
+ *
+ * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
  */
 struct AnnisVec_Annotation *annis_graph_annotations_for_node(const AnnisAnnotationGraph *g,
-                                                             AnnisNodeID node);
+                                                             AnnisNodeID node,
+                                                             AnnisErrorList **err);
 
 /**
  * Return a vector of all components for the graph `g`.
@@ -794,17 +798,23 @@ struct AnnisVec_AnnotationComponent *annis_graph_all_components_by_type(const An
 
 /**
  * Return a vector of all outgoing edges for the graph `g`, the `source` node and the given `component`.
+ *
+ * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
  */
 struct AnnisVec_Edge *annis_graph_outgoing_edges(const AnnisAnnotationGraph *g,
                                                  AnnisNodeID source,
-                                                 const AnnisAnnotationComponent *component);
+                                                 const AnnisAnnotationComponent *component,
+                                                 AnnisErrorList **err);
 
 /**
  * Return a vector of annnotations for the given `edge` in the `component` of graph `g.
+ *
+ * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
  */
 struct AnnisVec_Annotation *annis_graph_annotations_for_edge(const AnnisAnnotationGraph *g,
                                                              struct AnnisEdge edge,
-                                                             const AnnisAnnotationComponent *component);
+                                                             const AnnisAnnotationComponent *component,
+                                                             AnnisErrorList **err);
 
 /**
  * Initialize the logging of this library.
@@ -830,7 +840,7 @@ struct AnnisGraphUpdate *annis_graphupdate_new(void);
  * - `ptr` - The graph update object.
  * - `node_name` - Name of the new node.
  * - `node_type` - Type of the new node, e.g. "node" or "corpus".
- * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
+ * - `err` - Pointer to a list of errors. If any error occurred, this list will be non-empty.
  */
 void annis_graphupdate_add_node(struct AnnisGraphUpdate *ptr,
                                 const char *node_name,
@@ -842,7 +852,7 @@ void annis_graphupdate_add_node(struct AnnisGraphUpdate *ptr,
  *
  * - `ptr` - The graph update object.
  * - `node_name` - Name of node to delete.
- * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
+ * - `err` - Pointer to a list of errors. If any error occurred, this list will be non-empty.
  */
 void annis_graphupdate_delete_node(struct AnnisGraphUpdate *ptr,
                                    const char *node_name,
@@ -856,7 +866,7 @@ void annis_graphupdate_delete_node(struct AnnisGraphUpdate *ptr,
  * - `annos_ns` - Namespace of the new annotation.
  * - `annos_name` - Name of the new annotation.
  * - `annos_value` - Value of the new annotation.
- * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
+ * - `err` - Pointer to a list of errors. If any error occurred, this list will be non-empty.
  */
 void annis_graphupdate_add_node_label(struct AnnisGraphUpdate *ptr,
                                       const char *node_name,
@@ -872,7 +882,7 @@ void annis_graphupdate_add_node_label(struct AnnisGraphUpdate *ptr,
  * - `node_name` - Name of the node the label is attached to.
  * - `annos_ns` - Namespace of deleted new annotation.
  * - `annos_name` - Name of the deleted annotation.
- * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
+ * - `err` - Pointer to a list of errors. If any error occurred, this list will be non-empty.
  */
 void annis_graphupdate_delete_node_label(struct AnnisGraphUpdate *ptr,
                                          const char *node_name,
@@ -889,7 +899,7 @@ void annis_graphupdate_delete_node_label(struct AnnisGraphUpdate *ptr,
  * - `layer` - Layer of the new edge.
  * - `component_type` - Type of the component of the new edge.
  * - `component_name` - Name of the component of the new edge.
- * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
+ * - `err` - Pointer to a list of errors. If any error occurred, this list will be non-empty.
  */
 void annis_graphupdate_add_edge(struct AnnisGraphUpdate *ptr,
                                 const char *source_node,
@@ -908,7 +918,7 @@ void annis_graphupdate_add_edge(struct AnnisGraphUpdate *ptr,
  * - `layer` - Layer of the edge to delete.
  * - `component_type` - Type of the component of the edge to delete.
  * - `component_name` - Name of the component of the edge to delete.
- * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
+ * - `err` - Pointer to a list of errors. If any error occurred, this list will be non-empty.
  */
 void annis_graphupdate_delete_edge(struct AnnisGraphUpdate *ptr,
                                    const char *source_node,
@@ -930,7 +940,7 @@ void annis_graphupdate_delete_edge(struct AnnisGraphUpdate *ptr,
  * - `annos_ns` - Namespace of the new annotation.
  * - `annos_name` - Name of the new annotation.
  * - `annos_value` - Value of the new annotation.
- * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
+ * - `err` - Pointer to a list of errors. If any error occurred, this list will be non-empty.
  */
 void annis_graphupdate_add_edge_label(struct AnnisGraphUpdate *ptr,
                                       const char *source_node,
@@ -954,7 +964,7 @@ void annis_graphupdate_add_edge_label(struct AnnisGraphUpdate *ptr,
  * - `component_name` - Name of the component of the edge.
  * - `annos_ns` - Namespace of the annotation to delete.
  * - `annos_name` - Name of the annotation to delete.
- * - `err` - Pointer to a list of errors. If any error occured, this list will be non-empty.
+ * - `err` - Pointer to a list of errors. If any error occurred, this list will be non-empty.
  */
 void annis_graphupdate_delete_edge_label(struct AnnisGraphUpdate *ptr,
                                          const char *source_node,
