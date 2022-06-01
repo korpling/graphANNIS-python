@@ -39,7 +39,7 @@ def _get_edge_labels(db, edge_ptr, component_ptr):
 
     err = ffi.new("AnnisErrorList **")
     annos = CAPI.annis_graph_annotations_for_edge(db, edge, component_ptr, err)
-    consume_errors(annos)
+    consume_errors(err)
 
     for i in range(CAPI.annis_vec_annotation_size(annos)):
         a = CAPI.annis_vec_annotation_get(annos, i)
