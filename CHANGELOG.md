@@ -3,6 +3,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Update to graphANNIS 2.1.0 This does change the graphANNIS C-API (see
+  <https://github.com/korpling/graphANNIS/blob/main/CHANGELOG.md#200---2022-03-29>)
+  but does not actually the exported functions of the Python API.
+
 ## [1.4.1] - 2021-12-09 
 
 - Update to graphANNIS 1.4.1
