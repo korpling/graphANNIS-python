@@ -4,14 +4,14 @@ on: push
 jobs:
   deploy:
     name: Deploy graphANNIS package
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     # Only run Job on tagged commits that start with "v"
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.6'
+        python-version: '3.8'
     - name: Checkout
       uses: actions/checkout@v1
     - name: Install dependencies
