@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update to graphANNIS 2.4.8.
+- Changed minimal Python version to 3.8
 
 ## [2.1.0] - 2022-06-01 
 
