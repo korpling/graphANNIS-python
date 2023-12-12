@@ -270,7 +270,7 @@ class CorpusStorageManager:
 
         return G
 
-    def subcorpus_graph(self, corpus_name: str, document_ids) -> nx.MultiDiGraph:
+    def subcorpus_graph(self, corpus_name: str, document_ids: list) -> nx.MultiDiGraph:
         """ Return the copy of a subgraph which includes all nodes that belong to any of the given list of sub-corpus/document identifiers.
         :param corpus_name:  The name of the corpus for which the subgraph should be generated from.
         :param document_ids: A list of sub-corpus/document identifiers describing the subgraph.
